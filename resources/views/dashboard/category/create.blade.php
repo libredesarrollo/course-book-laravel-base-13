@@ -1,4 +1,6 @@
+@extends('dashboard.layout')
 
+@section('content')
     
     @include('dashboard.fragment._errors')
     
@@ -13,3 +15,4 @@
 
         <button type="submit">Enviar</button>
     </form>
+@endsection

@@ -1,10 +1,12 @@
+@extends('dashboard.layout')
 
+@section('content')
+    <h1>{{ $post->title }}</h1>
+    <p>{{ $post->description }}</p>
 
-<h1>{{ $post->title }}</h1>
-<p>{{ $post->description }}</p>
+    <div>{{ $post->content }}</div>
 
-<div>{{ $post->content }}</div>
-
-@if ($post->image)
-    <img src="/image/{{ $post->image }}" alt="">
-@endif
+    @if ($post->image)
+        <img src="/image/{{ $post->image }}" alt="">
+    @endif
+@endsection

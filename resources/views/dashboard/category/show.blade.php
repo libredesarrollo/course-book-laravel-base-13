@@ -1,6 +1,7 @@
+@extends('dashboard.layout')
 
-    
+@section('content')
     <h1>{{ $category->title }}</h1>
-    
-    <p>Slug: {{ $category->slug }}</p>
 
+    <p>Slug: {{ $category->slug }}</p>
+@endsection

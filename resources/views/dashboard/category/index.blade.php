@@ -1,5 +1,6 @@
+@extends('dashboard.layout')
 
-    
+@section('content')
     <a href="{{ route('category.create') }}">Crear</a>
 
     <table>
@@ -20,7 +21,7 @@
                     <td>
                         <a href="{{ route('category.show', $category) }}">Show</a>
                         <a href="{{ route('category.edit', $category) }}">Edit</a>
-                        
+
                         <form action="{{ route('category.destroy', $category) }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -31,4 +32,5 @@
             @endforeach
         </tbody>
     </table>
-{{ $categories->links() }}
+    {{ $categories->links() }}
+@endsection

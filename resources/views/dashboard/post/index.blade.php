@@ -1,7 +1,9 @@
+@extends('dashboard.layout')
 
-<a href="{{ route('post.create') }}">Create</a>
+@section('content')
+    <a href="{{ route('post.create') }}">Create</a>
 
-<table>
+    <table>
         <thead>
             <tr>
                 <td>
@@ -20,7 +22,7 @@
                     Options
                 </td>
             </tr>
-           
+
         </thead>
         <tbody>
             @foreach ($posts as $p)
@@ -43,11 +45,12 @@
                             @method('DELETE')
                             <button type="submit">Delete</button>
                         </form>
-                        <a href="{{ route('post.edit',$p) }}" target="_blank">Edit</a>
+                        <a href="{{ route('post.edit', $p) }}" target="_blank">Edit</a>
                     </td>
                 </tr>
             @endforeach
         </tbody>
-</table>
+    </table>
 
-{{ $posts->links() }}
+    {{ $posts->links() }}
+@endsection
