@@ -222,8 +222,8 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
-        <h1>{{ $name }}</h1>
+        {{-- <h1>{{ $name }}</h1>
         {{-- <a href="home">Home</a> --}}
-        <a href="{{ route('home') }}">Home</a>
+        {{-- <a href="{{ route('home') }}">Home</a> --}}
     </body>
 </html>
