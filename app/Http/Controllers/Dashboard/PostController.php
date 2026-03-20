@@ -22,6 +22,7 @@ class PostController extends Controller
     public function index(): View
     {
         $posts = Post::paginate(2);
+        
         return view('dashboard.post.index', compact('posts'));
     }
 
@@ -41,7 +42,7 @@ class PostController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         Post::create($request->validated());
-        return to_route('post.index');        
+        return to_route('post.index')->with('status','Registro Creado');   
     }
 
     /**
@@ -73,7 +74,7 @@ class PostController extends Controller
             $request->image->move(public_path('image'), $data['image']);
         }
         $post->update($data);
-        return to_route('post.index');
+        return to_route('post.index')->with('status','Registro Actualizado');
     }
 
     /**
@@ -82,6 +83,6 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         $post->delete();
-        return to_route('post.index');
+        return to_route('post.index')->with('status','Registro Eliminado');
     }
 }
