@@ -10,6 +10,17 @@ class CategoryRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+
+    function prepareForValidation()
+    {
+        if(!$this->slug){
+            $this->merge([
+                'slug' => str($this->title)->slug()
+            ]);
+        }
+        return parent::prepareForValidation();
+    }
+
     public function authorize(): bool
     {
         return true;

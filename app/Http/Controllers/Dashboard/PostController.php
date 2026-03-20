@@ -21,21 +21,16 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        // $posts = Post::get();
-        // dd( $posts);
         $posts = Post::paginate(2);
-        //  dd( $posts);
         return view('dashboard.post.index', compact('posts'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request): View
+    public function create(): View
     {
         $categories = Category::pluck('id', 'title');
-        //$categories = Category::get();
-        // return view('dashboard.post.create', ['categories' => $categories]);
         $post = new Post();
         return view('dashboard.post.create', compact('categories', 'post'));
     }
@@ -46,30 +41,7 @@ class PostController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         Post::create($request->validated());
-        return to_route('post.index');
-
-        // $res = Validator::make($request->all(),
-        // [
-        //     "title" => "required|min:5|max:500",
-        //     "slug" => "required|min:5|max:500",
-        //     "content" => "required|min:7",
-        //     "category_id" => "required|integer",
-        //     "description" => "required|min:7",
-        //     "posted" => "required"
-        //  ]);
-
-        //  dd($res->fails());
-
-        // $res = $request->validate([
-        //     "title" => "required|min:5|max:500",
-        //     "slug" => "required|min:5|max:500",
-        //     "content" => "required|min:7",
-        //     "category_id" => "required|integer",
-        //     "description" => "required|min:7",
-        //     "posted" => "required"
-        // ]);    
-
-        
+        return to_route('post.index');        
     }
 
     /**

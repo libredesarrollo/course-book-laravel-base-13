@@ -7,6 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PostRequest extends FormRequest
 {
+
+    function prepareForValidation()
+    {
+        if(!$this->slug){
+            $this->merge([
+                'slug' => str($this->title)->slug()
+            ]);
+        }
+        return parent::prepareForValidation();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
