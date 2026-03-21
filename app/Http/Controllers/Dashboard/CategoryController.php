@@ -37,14 +37,7 @@ class CategoryController extends Controller
         return to_route('category.index')->with('status','Registro Creado');   
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category): View
-    {
-        return view('dashboard.category.show', compact('category'));
-    }
-
+ 
     /**
      * Show the form for editing the specified resource.
      */
