@@ -1,52 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
+@extends('auth.layout')
 
+@section('content')
     <h1>Register</h1>
 
     <!-- Mostrar errores de validación -->
-    @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    @include('dashboard.fragment._errors')
 
-    <form method="POST" action="{{ route('register.store') }}">
+    <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-2">
         @csrf
 
         <div>
-            <label for="name">Name</label>
-            <input type="name" id="name" name="name" value="{{ old('name') }}" >
+            <label class="form-label" for="name">Name</label>
+            <input class="form-input" type="name" id="name" name="name" value="{{ old('name') }}">
         </div>
-         <div style="margin-top: 1rem;">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
-        </div>
-
-        <div style="margin-top: 1rem;">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div style="margin-top: 1rem;">
-            <label for="password">Password Confirmation</label>
-            <input type="password" id="password_confirmation" name="password_confirmation" required>
+        <div>
+            <label class="form-label" for="email">Email</label>
+            <input class="form-input" type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
         </div>
 
-        <div style="margin-top: 1rem;">
-            <button type="submit">
+        <div>
+            <label class="form-label" for="password">Password</label>
+            <input class="form-input" type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label class="form-label" for="password">Password Confirmation</label>
+            <input class="form-input" type="password" id="password_confirmation" name="password_confirmation" required>
+        </div>
+
+        <div class="flex flex-row-reverse">
+            <button type="submit" class="btn btn-primary">
                 Register
             </button>
         </div>
     </form>
 
-</body>
-</html>
+@endsection

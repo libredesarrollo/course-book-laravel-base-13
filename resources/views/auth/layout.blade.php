@@ -15,7 +15,7 @@
         {{ session('status') }}
     @endif
 
-    <div class="container">
+    <div class="container max-w-96 mt-5">
         <div class="card">
             @yield('content')
         </div>

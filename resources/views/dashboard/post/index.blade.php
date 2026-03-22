@@ -1,56 +1,59 @@
 @extends('dashboard.layout')
 
 @section('content')
-    <a href="{{ route('post.create') }}">Create</a>
 
-    <table>
-        <thead>
-            <tr>
-                <td>
-                    Id
-                </td>
-                <td>
-                    Title
-                </td>
-                <td>
-                    Posted
-                </td>
-                <td>
-                    Category
-                </td>
-                <td>
-                    Options
-                </td>
-            </tr>
+    <a class="btn btn-primary" href="{{ route('post.create') }}">Create</a>
 
-        </thead>
-        <tbody>
-            @foreach ($posts as $p)
+    <div class="overflow-x-auto mt-4">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        {{ $p->id }}
-                    </td>
-                    <td>
-                        {{ $p->title }}
-                    </td>
-                    <td>
-                        {{ $p->posted }}
-                    </td>
-                    <td>
-                        {{ $p->category->title }}
-                    </td>
-                    <td>
-                        <form action="{{ route('post.destroy', $p) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Delete</button>
-                        </form>
-                        <a href="{{ route('post.edit', $p) }}" target="_blank">Edit</a>
-                    </td>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Posted
+                    </th>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                        Options
+                    </th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+            </thead>
+            <tbody>
+                @foreach ($posts as $p)
+                    <tr>
+                        <td>
+                            {{ $p->id }}
+                        </td>
+                        <td>
+                            {{ $p->title }}
+                        </td>
+                        <td>
+                            {{ $p->posted }}
+                        </td>
+                        <td>
+                            {{ $p->category->title }}
+                        </td>
+                        <td class="flex gap-2">
+                            <form action="{{ route('post.destroy', $p) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn-sm btn-danger" type="submit">Delete</button>
+                            </form>
+                            <a class="btn-sm btn-secondary" href="{{ route('post.edit', $p) }}" target="_blank">Edit</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     {{ $posts->links() }}
 @endsection

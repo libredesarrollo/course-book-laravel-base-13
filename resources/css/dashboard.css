@@ -1,0 +1,83 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/******************* table */
+.table {
+    @apply table-auto w-full
+}
+
+.table thead tr {
+    @apply bg-gray-300
+}
+
+.table thead th,
+.table tbody td {
+    @apply px-4 py-2
+}
+.table tbody tr {
+    @apply border-b
+}
+/******************* table */
+
+/******************* button */
+.btn {
+    @apply text-white font-bold py-2 px-4 rounded 
+}
+.btn-sm {
+    @apply text-white text-sm py-1 px-2 rounded 
+}
+.btn-primary {
+    @apply bg-blue-500 hover:bg-blue-700
+}
+.btn-danger {
+    @apply bg-red-500 hover:bg-red-700
+}
+.btn-secondary {
+    @apply bg-purple-500 hover:bg-purple-700
+}
+/******************* button */
+/******************* form */
+/* Contenedor del Label */
+    .form-label {
+        @apply block mb-2.5 text-sm font-medium;
+    }
+
+    /* Estilo base para todos los Inputs */
+    .form-input {
+        @apply border text-sm rounded-sm block w-full px-3 py-2.5 shadow-xs;
+    }    
+/******************* form */
+
+/******************* Container */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  width: 100%;
+  
+  @variant sm { max-width: 640px; }
+  @variant md { max-width: 768px; }
+  @variant lg { max-width: 1024px; }
+  @variant xl { max-width: 1280px; }
+  @variant 2xl { max-width: 1536px; }
+}
+/******************* Container */
+/******************* Card */
+.card {
+    @apply border shadow-lg p-2 rounded-sm
+}
+/******************* Card */
+
+/******************* Form Error */
+.error-form {
+    @apply border shadow-sm p-2 rounded-sm bg-red-700 text-white mt-2
+}
+/******************* Form Error */
