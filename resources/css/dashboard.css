@@ -12,48 +12,52 @@
 
 /******************* table */
 .table {
-    @apply table-auto w-full
+    @apply w-full text-sm text-left text-gray-500;
 }
 
-.table thead tr {
-    @apply bg-gray-300
+.table thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-50;
 }
 
-.table thead th,
-.table tbody td {
-    @apply px-4 py-2
+.table th {
+    @apply px-6 py-3 font-medium;
 }
+
+.table td {
+    @apply px-6 py-4;
+}
+
 .table tbody tr {
-    @apply border-b
+    @apply bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors;
 }
 /******************* table */
 
 /******************* button */
 .btn {
-    @apply text-white font-bold py-2 px-4 rounded 
+    @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
 }
 .btn-sm {
-    @apply text-white text-sm py-1 px-2 rounded 
+    @apply px-2.5 py-1.5 text-xs text-white rounded;
 }
 .btn-primary {
-    @apply bg-blue-500 hover:bg-blue-700
+    @apply bg-blue-600 hover:bg-blue-700 focus:ring-blue-500;
 }
 .btn-danger {
-    @apply bg-red-500 hover:bg-red-700
+    @apply bg-red-600 hover:bg-red-700 focus:ring-red-500;
 }
 .btn-secondary {
-    @apply bg-purple-500 hover:bg-purple-700
+    @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500;
 }
 /******************* button */
 /******************* form */
 /* Contenedor del Label */
     .form-label {
-        @apply block mb-2.5 text-sm font-medium;
+        @apply block mb-1 text-sm font-medium text-gray-700;
     }
 
     /* Estilo base para todos los Inputs */
     .form-input {
-        @apply border text-sm rounded-sm block w-full px-3 py-2.5 shadow-xs;
+        @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3;
     }    
 /******************* form */
 
@@ -72,12 +76,12 @@
 /******************* Container */
 /******************* Card */
 .card {
-    @apply border shadow-lg p-2 rounded-sm
+    @apply bg-white border border-gray-200 shadow-sm rounded-lg p-6;
 }
 /******************* Card */
 
 /******************* Form Error */
 .error-form {
-    @apply border shadow-sm p-2 rounded-sm bg-red-700 text-white mt-2
+    @apply p-3 text-sm text-red-700 bg-red-50 rounded-md border border-red-200 mt-2;
 }
 /******************* Form Error */
