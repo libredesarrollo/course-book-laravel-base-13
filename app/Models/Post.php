@@ -11,4 +11,9 @@ class Post extends Model
     function category() {
         return $this->belongsTo(Category::class);
     }
+
+    function tags()  {
+        // return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class,'taggable');
+    }
 }

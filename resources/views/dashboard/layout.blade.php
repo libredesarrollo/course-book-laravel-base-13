@@ -33,6 +33,8 @@
                 </button>
                 <div class="absolute right-0 top-full hidden w-48 pt-2 group-hover:block group-focus-within:block z-10">
                     <div class="bg-white border border-gray-200 rounded-md shadow-lg py-1">
+                        <a href="{{ route('profile.edit') }}">Profile</a>
+
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
