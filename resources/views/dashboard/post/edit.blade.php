@@ -7,4 +7,5 @@
         @method('PATCH')
         @include('dashboard.post._form', ['task' => 'edit'])
     </form>
+    
 @endsection

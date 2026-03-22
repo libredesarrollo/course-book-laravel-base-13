@@ -1,18 +1,22 @@
 @extends('dashboard.layout')
 
 @section('content')
-    
     @include('dashboard.fragment._errors')
-    
-    <form action="{{ route('category.store') }}" method="POST">
+
+    <form action="{{ route('category.store') }}" method="POST" class="grid grid-cols-2 gap-3">
         @csrf
-        
-        <label for="title">Title</label>
-        <input type="text" name="title" value="{{ old('title', $category->title) }}">
+        <div>
+            <label class="form-label" for="title">Title</label>
+            <input type="text" class="form-input" name="title" value="{{ old('title', $category->title) }}">
+        </div>
+        <div>
+            <label class="form-label" for="slug">Slug</label>
+            <input type="text" class="form-input" name="slug" value="{{ old('slug', $category->slug) }}">
+        </div>
 
-        <label for="slug">Slug</label>
-        <input type="text" name="slug" value="{{ old('slug', $category->slug) }}">
+        <div class="flex">
+            <button class="btn btn-primary mt-3" type="submit">Send</button>
+        </div>
 
-        <button type="submit">Enviar</button>
     </form>
 @endsection

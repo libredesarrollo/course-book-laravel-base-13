@@ -1,17 +1,17 @@
 @extends('auth.layout')
 
 @section('content')
-    <h1>Register</h1>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Register</h1>
 
     <!-- Mostrar errores de validación -->
     @include('dashboard.fragment._errors')
 
-    <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-2">
+    <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-4">
         @csrf
 
         <div>
             <label class="form-label" for="name">Name</label>
-            <input class="form-input" type="name" id="name" name="name" value="{{ old('name') }}">
+            <input class="form-input" type="text" id="name" name="name" value="{{ old('name') }}">
         </div>
         <div>
             <label class="form-label" for="email">Email</label>
@@ -23,11 +23,15 @@
             <input class="form-input" type="password" id="password" name="password" required>
         </div>
         <div>
-            <label class="form-label" for="password">Password Confirmation</label>
+            <label class="form-label" for="password_confirmation">Password Confirmation</label>
             <input class="form-input" type="password" id="password_confirmation" name="password_confirmation" required>
         </div>
 
-        <div class="flex flex-row-reverse">
+        <div class="flex items-center justify-between mt-4">
+            <a class="text-sm text-gray-600 hover:text-gray-900 underline" href="{{ route('login') }}">
+                Already registered?
+            </a>
+
             <button type="submit" class="btn btn-primary">
                 Register
             </button>

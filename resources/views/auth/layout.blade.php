@@ -5,17 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
-    @vite(['resources/css/dashboard.css', 'resources/js/app.js'])
+    <title>Auth</title>
+    @vite(['resources/css/dashboard.css'])
 </head>
 
-<body>
-
-    @if (session('status'))
-        {{ session('status') }}
-    @endif
-
-    <div class="container max-w-96 mt-5">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md p-4">
         <div class="card">
             @yield('content')
         </div>

@@ -1,11 +1,11 @@
 @extends('auth.layout')
 
 @section('content')
-    <h1>Login</h1>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h1>
 
     @include('dashboard.fragment._errors')
 
-    <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-2">
+    <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-4">
         @csrf
 
         <div>
@@ -18,7 +18,11 @@
             <input class="form-input" type="password" id="password" name="password" required>
         </div>
 
-          <div class="flex flex-row-reverse">
+        <div class="flex items-center justify-between mt-4">
+            <a class="text-sm text-gray-600 hover:text-gray-900 underline" href="{{ route('register') }}">
+                Create an account
+            </a>
+
             <button type="submit" class="btn btn-primary">
                 Log in
             </button>

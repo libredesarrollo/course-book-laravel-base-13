@@ -1,36 +1,38 @@
 @extends('dashboard.layout')
 
 @section('content')
-    <a href="{{ route('category.create') }}">Crear</a>
+    <a class="btn btn-primary" href="{{ route('category.create') }}">Crear</a>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Slug</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($categories as $category)
+    <div class="overflow-x-auto mt-4">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ $category->id }}</td>
-                    <td>{{ $category->title }}</td>
-                    <td>{{ $category->slug }}</td>
-                    <td>
-                        <a href="{{ route('category.show', $category) }}">Show</a>
-                        <a href="{{ route('category.edit', $category) }}">Edit</a>
-
-                        <form action="{{ route('category.destroy', $category) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Delete</button>
-                        </form>
-                    </td>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Actions</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($categories as $category)
+                    <tr>
+                        <td>{{ $category->id }}</td>
+                        <td>{{ $category->title }}</td>
+                        <td>{{ $category->slug }}</td>
+                        <td class="flex gap-2">
+                            <a class="btn-sm btn-secondary" href="{{ route('category.show', $category) }}">Show</a>
+                            <a class="btn-sm btn-secondary"  href="{{ route('category.edit', $category) }}">Edit</a>
+
+                            <form action="{{ route('category.destroy', $category) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn-sm btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     {{ $categories->links() }}
 @endsection
