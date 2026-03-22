@@ -10,83 +10,9 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/******************* table */
-.table {
-    @apply w-full text-sm text-left text-gray-500;
-}
-
-.table thead {
-    @apply text-xs text-gray-700 uppercase bg-gray-50;
-}
-
-.table th {
-    @apply px-6 py-3 font-medium;
-}
-
-.table td {
-    @apply px-6 py-4;
-}
-
-.table tbody tr {
-    @apply bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors;
-}
-/******************* table */
-
-/******************* button */
-.btn {
-    @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
-}
-.btn-sm {
-    @apply px-2.5 py-1.5 text-xs text-white rounded;
-}
-.btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 focus:ring-blue-500;
-}
-.btn-danger {
-    @apply bg-red-600 hover:bg-red-700 focus:ring-red-500;
-}
-.btn-secondary {
-    @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500;
-}
-/******************* button */
-/******************* form */
-/* Contenedor del Label */
-    .form-label {
-        @apply block mb-1 text-sm font-medium text-gray-700;
-    }
-
-    /* Estilo base para todos los Inputs */
-    .form-input {
-        @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3;
-    }    
-/******************* form */
-
-/******************* Container */
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  width: 100%;
-  
-  @variant sm { max-width: 640px; }
-  @variant md { max-width: 768px; }
-  @variant lg { max-width: 1024px; }
-  @variant xl { max-width: 1280px; }
-  @variant 2xl { max-width: 1536px; }
-}
-/******************* Container */
-/******************* Card */
-.card {
-    @apply bg-white border border-gray-200 shadow-sm rounded-lg p-6;
-}
-/******************* Card */
-
-/******************* Form Error */
-.error-form {
-    @apply p-3 text-sm text-red-700 bg-red-50 rounded-md border border-red-200 mt-2;
-}
-/******************* Form Error */
-/******************* Status Box */
-.status-box {
-    @apply p-3 text-sm text-green-700 bg-green-50 rounded-md border border-green-200 mt-2;
-}
-/******************* Status Box */
+@import './components/table.css';
+@import './components/button.css';
+@import './components/form.css';
+@import './components/container.css';
+@import './components/card.css';
+@import './components/boxs.css';

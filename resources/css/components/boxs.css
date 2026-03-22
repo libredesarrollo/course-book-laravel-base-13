@@ -1,0 +1,7 @@
+.error-form {
+    @apply p-3 text-sm text-red-700 bg-red-50 rounded-md border border-red-200 mt-2;
+}
+
+.status-box {
+    @apply p-3 text-sm text-green-700 bg-green-50 rounded-md border border-green-200 mt-2;
+}

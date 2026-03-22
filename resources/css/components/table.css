@@ -1,0 +1,19 @@
+.table {
+    @apply w-full text-sm text-left text-gray-500;
+}
+
+.table thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-50;
+}
+
+.table th {
+    @apply px-6 py-3 font-medium;
+}
+
+.table td {
+    @apply px-6 py-4;
+}
+
+.table tbody tr {
+    @apply bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors;
+}
