@@ -30,11 +30,4 @@ Route::group(['prefix' => 'dashboard', 'middleware'=> ['auth',App\Http\Middlewar
 Route::group(['prefix' => 'blog'], function () {
     Route::get('/', [BlogController::class, 'index'])->name('blog.index');
     Route::get('/{post}', [BlogController::class, 'show'])->name('blog.show');
-    Route::get('detail-component/{post}',[ App\View\Components\Blog\Post\Detail::class, 'render' ]);
-    Route::get('detail-component-2/{post}',[ App\View\Components\Blog\Post\Detail::class, 'test_route' ]);
-
-    Route::get('detail-component-3/{post}', function (Post $post) {
-        // Instanciamos el componente pasándole el modelo Post
-        return (new Detail($post))->render();
-    })->name('c.blog.show');
 });
