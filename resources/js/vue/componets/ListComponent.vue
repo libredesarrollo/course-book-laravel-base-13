@@ -32,7 +32,7 @@
                     {{ p.row.posted }}
                 </o-table-column>
                 <o-table-column field="category_id" label="Category" v-slot="p">
-                    {{ p.row.category.title }}
+                    {{ p.row.category ? p.row.category.title : '-'}}
                 </o-table-column>
                 <o-table-column field="category_id" label="Actions" v-slot="p">
 
@@ -64,6 +64,7 @@ export default {
         }
     },
     mounted() {
+        console.log(this.$root.token)
         this.listPage()
     },
     methods: {

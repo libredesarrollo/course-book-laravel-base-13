@@ -10,7 +10,7 @@
                     <o-input v-model="form.password" type="password"></o-input>
                 </o-field>
 
-                <o-button :disabled="disabledBotton" variant="primary" native-type="submit" class="float-right">Send</o-button>
+                <o-button :disabled="disabledBotton" variant="primary" @click="submit" class="float-right">Send</o-button>
             </form>
         </div>
     </div>

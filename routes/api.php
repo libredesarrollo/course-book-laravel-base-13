@@ -16,9 +16,11 @@ Route::get('category/{category}', [App\Http\Controllers\Api\CategoryController::
 Route::get('category/slug/{category:slug}', [App\Http\Controllers\Api\CategoryController::class, 'show']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::resource('category', App\Http\Controllers\Api\CategoryController::class)->except(["create", "edit"]);
-    Route::resource('post', App\Http\Controllers\Api\PostController::class)->except(["create", "edit"]);
+    Route::resource('category', App\Http\Controllers\Api\CategoryController::class)->except(["create", "edit", "index"]);
+    Route::resource('post', App\Http\Controllers\Api\PostController::class)->except(["create", "edit", "index"]);
 });
+ Route::resource('category', App\Http\Controllers\Api\CategoryController::class)->only(["index"]);
+    Route::resource('post', App\Http\Controllers\Api\PostController::class)->only(["index"]);
 
 Route::post('user/login',[App\Http\Controllers\Api\UserController::class, 'login']);
 Route::post('user/logout/{tokenId}',[App\Http\Controllers\Api\UserController::class, 'logout']);
