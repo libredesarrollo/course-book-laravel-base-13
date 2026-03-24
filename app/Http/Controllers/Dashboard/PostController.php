@@ -42,6 +42,7 @@ class PostController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         Post::create($request->validated());
+        // auth()->user()->posts()->save($post);
         return to_route('post.index')->with('status','Registro Creado');   
     }
 
@@ -59,6 +60,27 @@ class PostController extends Controller
     // public function edit(int $post)
     public function edit(Post $post): View
     {
+
+     
+
+        // dd(Gate::check('create', $post));
+        // dd(Gate::any(['create','update'], $post));
+        // dd(Gate::none(['create','update'], $post));
+        // dd(auth()->user()->can('create', $post));
+        // dd(auth()->user()->cannot('create', $post));
+
+
+        // Gate::allowIf(fn(User $user) => $user->id < 0);
+
+        // dd(Gate::inspect('update', $post)->message());
+        // if (!Gate::allows('update', $post)) {
+        // $res = Gate::inspect('update', $post);
+        // if (!$res->allowed()) {
+        //     return abort(403, $res->message());
+        // }
+
+        // Gate::authorize('update', $post);
+
         $categories = Category::pluck('id', 'title');
         return view('dashboard.post.edit', compact('categories', 'post'));
     }
@@ -68,6 +90,12 @@ class PostController extends Controller
      */
     public function update(PutRequest $request, Post $post): RedirectResponse
     {
+
+        // if (!Gate::allows('update', $post)) {
+        //     return abort(403);
+        // }
+
+
         $data = $request->validated();
         if(isset($data['image'])){
             $data['image'] = time().'.'.$data["image"]->extension();
@@ -83,6 +111,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
+        // if (!Gate::allows('delete', $post)) {
+        //     return abort(403);
+        // }
         $post->delete();
         return to_route('post.index')->with('status','Registro Eliminado');
     }
