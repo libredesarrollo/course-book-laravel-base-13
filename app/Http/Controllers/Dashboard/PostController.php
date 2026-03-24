@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 
 use Illuminate\View\View;
 
@@ -73,6 +73,7 @@ class PostController extends Controller
             $data['image'] = time().'.'.$data["image"]->extension();
             $request->image->move(public_path('image'), $data['image']);
         }
+        Cache::forget('post_show_' . $post->id);
         $post->update($data);
         return to_route('post.index')->with('status','Registro Actualizado');
     }
