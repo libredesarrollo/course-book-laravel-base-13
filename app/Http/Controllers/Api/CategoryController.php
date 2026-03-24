@@ -39,7 +39,6 @@ class CategoryController extends Controller
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();
-        // return response()->json("ok");
         return response()->json(['message' => 'Post eliminado'], 204);
     }
 }
