@@ -3,16 +3,21 @@
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\PostController;
+use App\Http\Controllers\Pruebas\CourseController;
 use App\Http\Controllers\User\ProfileController;
 use App\Models\Post;
 use App\View\Components\Blog\Post\Detail;
 use Illuminate\Support\Facades\Route;
 
+// WELCOME
 Route::get('/', function () {
     return view('welcome', ['name' => 'John ']);
 })->name('home');
 
-// Rutas de Perfil (accesibles para cualquier usuario autenticado)
+// PRUEBAS
+Route::get('/blade', [CourseController::class, 'index']);
+
+// PERFIL (accesibles para cualquier usuario autenticado)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

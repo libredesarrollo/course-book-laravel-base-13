@@ -1,10 +1,22 @@
 <?php
+
 namespace App\Policies;
+
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+
 class PostPolicy
 {
+    public function before(User $user, string $ability): ?bool
+    {
+
+        if ($user->isAdmin()) {
+            return null;
+        }
+
+        return false;
+    }
+
     // /**
     //  * Determine whether the user can view any models.
     //  */
@@ -19,6 +31,7 @@ class PostPolicy
     {
         return true;
     }
+
     /**
      * Determine whether the user can create models.
      */
@@ -26,6 +39,7 @@ class PostPolicy
     {
         return $user->id > 0;
     }
+
     /**
      * Determine whether the user can update the model.
      */
@@ -33,6 +47,7 @@ class PostPolicy
     {
         return $user->id == $post->user_id;
     }
+
     /**
      * Determine whether the user can delete the model.
      */

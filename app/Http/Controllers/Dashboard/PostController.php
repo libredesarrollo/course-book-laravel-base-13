@@ -13,18 +13,42 @@ use App\Models\Category;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\PutRequest;
+use App\Mail\SubscribeEmail;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+
+
     public function index(): View
     {
         $posts = Post::paginate(2);
-        
+
+            
+
+    Mail::to('no-reply@example.net.com')
+        ->send(new SubscribeEmail('contact@gmail.com', "SUPER PROMO", "<h1>VIVA LA PATRIA<h1><p>Hola loKito!</p>"));
+
+
+
+        //         Log::emergency("LOGS!!");
+        // Log::alert("LOGS!!");
+        // Log::critical("LOGS!!");
+        // Log::error("LOGS!!");
+        // Log::warning("LOGS!!");
+        // Log::notice("LOGS!!");
+        // Log::info("LOGS!!");
+        // Log::debug("LOGS!!");
+                // dd(config('custom'));
         return view('dashboard.post.index', compact('posts'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -41,8 +65,13 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        Post::create($request->validated());
+        // $post = Post::create($request->validated());
+
+        // $post = new Post($request->validated());
         // auth()->user()->posts()->save($post);
+        
+        auth()->user()->posts()->save(new Post($request->validated()));
+        
         return to_route('post.index')->with('status','Registro Creado');   
     }
 
@@ -61,6 +90,15 @@ class PostController extends Controller
     public function edit(Post $post): View
     {
 
+        // en los GATES
+        // if(!Gate::allows('update-post', $post)){
+        //     abort(403);
+        // }
+     
+        // Politica
+        if(!Gate::allows('update', $post)){
+            abort(403,'FUERA DE AQUI YANKI!!');
+        }
      
 
         // dd(Gate::check('create', $post));
@@ -91,9 +129,9 @@ class PostController extends Controller
     public function update(PutRequest $request, Post $post): RedirectResponse
     {
 
-        // if (!Gate::allows('update', $post)) {
-        //     return abort(403);
-        // }
+        if (!Gate::allows('update', $post)) {
+            return abort(403);
+        }
 
 
         $data = $request->validated();
@@ -103,6 +141,7 @@ class PostController extends Controller
         }
         Cache::forget('post_show_' . $post->id);
         $post->update($data);
+
         return to_route('post.index')->with('status','Registro Actualizado');
     }
 
@@ -111,9 +150,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
-        // if (!Gate::allows('delete', $post)) {
-        //     return abort(403);
-        // }
+        if (!Gate::allows('delete', $post)) {
+            return abort(403);
+        }
         $post->delete();
         return to_route('post.index')->with('status','Registro Eliminado');
     }
