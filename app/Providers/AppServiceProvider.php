@@ -58,5 +58,12 @@ class AppServiceProvider extends ServiceProvider
         // Gate::define('is-admin', function ($user) {
         //     return $user->hasRole('Admin');
         // });
+
+
+        // GATE PARA SPATIE
+           Gate::define('is-admin', function ($user) {
+            return true;
+            // return $user->hasRole('Admin');
+        });
     }
 }

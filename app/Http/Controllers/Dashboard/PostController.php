@@ -9,6 +9,7 @@ use App\Mail\SubscribeEmail;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -21,6 +22,9 @@ class PostController extends Controller
      */
     public function index(): View
     {
+        if(!Auth::user()->hasPermissionTo('editor.post.index')){
+            return abort(403);
+        }
         // dd(hello2('Andres'));
         // $posts = Post::with('category')->paginate(20);
         $posts = Post::paginate(20);
@@ -45,6 +49,9 @@ class PostController extends Controller
      */
     public function create(): View
     {
+
+   
+
         $categories = Category::pluck('id', 'title');
         $post = new Post;
 
