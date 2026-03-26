@@ -19,6 +19,12 @@
                     class="text-sm font-medium {{ request()->routeIs('post.*') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Posts</a>
                 <a href="{{ route('category.index') }}"
                     class="text-sm font-medium {{ request()->routeIs('category.*') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Categorías</a>
+                <a href="{{ route('user.index') }}"
+                    class="text-sm font-medium {{ request()->routeIs('user.*') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">User</a>
+                <a href="{{ route('permission.index') }}"
+                    class="text-sm font-medium {{ request()->routeIs('permission.*') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Permisos</a>
+                <a href="{{ route('role.index') }}"
+                    class="text-sm font-medium {{ request()->routeIs('role.*') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Role</a>
             </div>
 
             <div class="relative group">

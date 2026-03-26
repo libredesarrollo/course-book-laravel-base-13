@@ -28,6 +28,11 @@ class RoleSeeder extends Seeder
         // Permission::create(['name' => 'editor.category.update']);
         // Permission::create(['name' => 'editor.category.destroy']);
 
+        Permission::create(['name' => 'editor.user.index']);
+        Permission::create(['name' => 'editor.user.create']);
+        Permission::create(['name' => 'editor.user.update']);
+        Permission::create(['name' => 'editor.user.destroy']);
+
         // Permission::find(1)->assignRole(Role::find(1));
         // Permission::find(1)->assignRole(Role::find(2));
 
@@ -44,16 +49,16 @@ class RoleSeeder extends Seeder
         // // Permission::find(7)->assignRole($role2);
         // // Permission::find(8)->assignRole($role2);
 
-        $permission1 = Permission::find(1);
-        $permission2 = Permission::find(2);
-        $permission3 = Permission::find(3);
-        $permission4 = Permission::find(4);
-        $permission5 = Permission::find(5);
-        $permission6 = Permission::find(6);
-        $permission7 = Permission::find(7);
-        $permission8 = Permission::find(8);
+        // $permission1 = Permission::find(1);
+        // $permission2 = Permission::find(2);
+        // $permission3 = Permission::find(3);
+        // $permission4 = Permission::find(4);
+        // $permission5 = Permission::find(5);
+        // $permission6 = Permission::find(6);
+        // $permission7 = Permission::find(7);
+        // $permission8 = Permission::find(8);
 
-        Role::find(2)->givePermissionTo($permission1, $permission2, $permission3, $permission4, $permission5, $permission5, $permission6, $permission7, $permission8);
+        // Role::find(2)->givePermissionTo($permission1, $permission2, $permission3, $permission4, $permission5, $permission5, $permission6, $permission7, $permission8);
 
     }
 }
