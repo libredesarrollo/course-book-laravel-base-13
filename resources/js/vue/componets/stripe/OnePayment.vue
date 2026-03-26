@@ -40,7 +40,7 @@ export default {
       sessionID: '',
       lineItems: [
         {
-          price: 'price_1QYPNDCWud7Ri9mJPPPtwAnj', // recurrente
+          price: 'price_1TFHdtCWud7Ri9mJMqouVYmL', // recurrente
           quantity: 1
         },
         // {
