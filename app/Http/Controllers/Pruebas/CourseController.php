@@ -5,10 +5,17 @@ namespace App\Http\Controllers\Pruebas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\App as AppLaravel;
+
 class CourseController extends Controller
 {
     public function index(Request $request)
     {
+
+        // definir lang manualmente
+        // AppLaravel::setLocale('es');
+        // app()->setLocale('es');
+
         return view('pruebas.dashboard', [
             'user' => 'Andrés Cruz',
             'role' => 'admin',

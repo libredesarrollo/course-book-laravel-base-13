@@ -1,7 +1,7 @@
 @extends('dashboard.layout')
 
 @section('content')
-
+    
     <a class="btn btn-primary" href="{{ route('post.create') }}">Create</a>
 
     <div class="overflow-x-auto mt-4">

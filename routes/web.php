@@ -5,6 +5,10 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Pruebas\CourseController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Middleware\LanguagePrefixMiddleware;
+use App\Jobs\SendSubscribeEmailJob;
+use App\Jobs\TestJob;
+use App\Mail\SubscribeEmail;
 use App\Models\Post;
 use App\View\Components\Blog\Post\Detail;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +19,15 @@ Route::get('/', function () {
 })->name('home');
 
 // PRUEBAS
-Route::get('/blade', [CourseController::class, 'index']);
+Route::get('/blade', [CourseController::class, 'index'])->middleware(LanguagePrefixMiddleware::class);
+
+// QUEUE AND JOBS
+Route::get('/test-job',function(){
+    // SendSubscribeEmailJob::dispatch(auth()->user());
+    TestJob::dispatch()->onQueue('culeables'); // COLCA CON NOMBRE php artisan queue:work --queue=culeables
+
+    return 'Super vista';
+});
 
 // PERFIL (accesibles para cualquier usuario autenticado)
 Route::middleware('auth')->group(function () {

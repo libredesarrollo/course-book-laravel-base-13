@@ -26,14 +26,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // prevenir el problema de N+1
-        // Model::preventLazyLoading(!app()->isProduction());
+        Model::preventLazyLoading(!app()->isProduction());
 
+        // Personalizar atributos de Vite
         Vite::useScriptTagAttributes(
             [
                 'async' => true
             ]
         );
+        Vite::useStyleTagAttributes(
+            [
+                'custom-attribute' => true
+            ]
+        );
 
+        // GATES definidas de manera manual, USA los Policy Mejor!
         // Gate::define('update-post', function ($user, $post) {
         //     return $user->id == $post->user_id;
         // });

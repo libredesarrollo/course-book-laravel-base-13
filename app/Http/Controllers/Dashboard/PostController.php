@@ -3,38 +3,30 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\PutRequest;
+use App\Http\Requests\Post\StoreRequest;
+use App\Mail\SubscribeEmail;
+use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
-
-use Illuminate\View\View;
-
-use App\Models\Post;
-use App\Models\Category;
-
-use App\Http\Requests\Post\StoreRequest;
-use App\Http\Requests\Post\PutRequest;
-use App\Mail\SubscribeEmail;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
-
-
     public function index(): View
     {
-        $posts = Post::paginate(2);
+        // dd(hello2('Andres'));
+        // $posts = Post::with('category')->paginate(20);
+        $posts = Post::paginate(20);
 
-            
-
-    Mail::to('no-reply@example.net.com')
-        ->send(new SubscribeEmail('contact@gmail.com', "SUPER PROMO", "<h1>VIVA LA PATRIA<h1><p>Hola loKito!</p>"));
-
-
+        // Mail::to('no-reply@example.net.com')
+        //     ->send(new SubscribeEmail('contact@gmail.com', 'SUPER PROMO', '<h1>VIVA LA PATRIA<h1><p>Hola loKito!</p>'));
 
         //         Log::emergency("LOGS!!");
         // Log::alert("LOGS!!");
@@ -44,11 +36,9 @@ class PostController extends Controller
         // Log::notice("LOGS!!");
         // Log::info("LOGS!!");
         // Log::debug("LOGS!!");
-                // dd(config('custom'));
+        // dd(config('custom'));
         return view('dashboard.post.index', compact('posts'));
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -56,7 +46,8 @@ class PostController extends Controller
     public function create(): View
     {
         $categories = Category::pluck('id', 'title');
-        $post = new Post();
+        $post = new Post;
+
         return view('dashboard.post.create', compact('categories', 'post'));
     }
 
@@ -69,10 +60,10 @@ class PostController extends Controller
 
         // $post = new Post($request->validated());
         // auth()->user()->posts()->save($post);
-        
+
         auth()->user()->posts()->save(new Post($request->validated()));
-        
-        return to_route('post.index')->with('status','Registro Creado');   
+
+        return to_route('post.index')->with('status', 'Registro Creado');
     }
 
     /**
@@ -94,19 +85,17 @@ class PostController extends Controller
         // if(!Gate::allows('update-post', $post)){
         //     abort(403);
         // }
-     
+
         // Politica
-        if(!Gate::allows('update', $post)){
-            abort(403,'FUERA DE AQUI YANKI!!');
+        if (! Gate::allows('update', $post)) {
+            abort(403, 'FUERA DE AQUI YANKI!!');
         }
-     
 
         // dd(Gate::check('create', $post));
         // dd(Gate::any(['create','update'], $post));
         // dd(Gate::none(['create','update'], $post));
         // dd(auth()->user()->can('create', $post));
         // dd(auth()->user()->cannot('create', $post));
-
 
         // Gate::allowIf(fn(User $user) => $user->id < 0);
 
@@ -120,6 +109,7 @@ class PostController extends Controller
         // Gate::authorize('update', $post);
 
         $categories = Category::pluck('id', 'title');
+
         return view('dashboard.post.edit', compact('categories', 'post'));
     }
 
@@ -129,20 +119,19 @@ class PostController extends Controller
     public function update(PutRequest $request, Post $post): RedirectResponse
     {
 
-        if (!Gate::allows('update', $post)) {
+        if (! Gate::allows('update', $post)) {
             return abort(403);
         }
 
-
         $data = $request->validated();
-        if(isset($data['image'])){
-            $data['image'] = time().'.'.$data["image"]->extension();
+        if (isset($data['image'])) {
+            $data['image'] = time().'.'.$data['image']->extension();
             $request->image->move(public_path('image'), $data['image']);
         }
-        Cache::forget('post_show_' . $post->id);
+        Cache::forget('post_show_'.$post->id);
         $post->update($data);
 
-        return to_route('post.index')->with('status','Registro Actualizado');
+        return to_route('post.index')->with('status', 'Registro Actualizado');
     }
 
     /**
@@ -150,10 +139,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
-        if (!Gate::allows('delete', $post)) {
+        if (! Gate::allows('delete', $post)) {
             return abort(403);
         }
         $post->delete();
-        return to_route('post.index')->with('status','Registro Eliminado');
+
+        return to_route('post.index')->with('status', 'Registro Eliminado');
     }
 }

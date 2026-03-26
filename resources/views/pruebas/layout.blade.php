@@ -10,6 +10,11 @@
 
     <header class="mb-5 p-4 bg-white shadow">
         {{-- Directiva de Autenticación --}}
+
+        {{-- prueba traducciones --}}
+        <p>{{ __('welcome.welcome') }}</p>
+        <p>{{ __('welcome.welcome_by',['name' => 'andrew']) }}</p>
+
         @auth
             <p>Conectado como: <strong>@yield('user_name')</strong></p>
         @endauth
