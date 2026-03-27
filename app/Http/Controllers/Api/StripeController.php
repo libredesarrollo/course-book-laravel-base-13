@@ -14,7 +14,7 @@ class StripeController extends Controller
 {
 
     // Orden/Session
-    function createSession(string $priceId, string $successURL = 'http://larafirststep.test/vue/stripe/success', string $cancelUrl = 'http://larafirststep.test/vue/stripe/cancel')
+    function createSession(string $priceId, string $successURL, string $cancelUrl)
     {
       
         $session = Checkout::guest()->create($priceId, [
@@ -28,6 +28,35 @@ class StripeController extends Controller
             'id' => $session->id,
             'url' => $session->url
         ]);
+    }
+
+        /**
+     * Create a Stripe Checkout Session by dynamic amount
+     */
+    public function createSessionByAmount(float $amount, string $successRouteUrl, string $cancelUrl = "https://academy.desarrollolibre.net/")
+    {
+        $session = Cashier::stripe()->checkout->sessions->create([
+            'success_url' => $successRouteUrl,
+            'cancel_url' => $cancelUrl,
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'product_data' => [
+                            'name' => 'Compra en Desarrollolibre Academy',
+                        ],
+                        'unit_amount' => $amount * 100, // Stripe uses cents
+                    ],
+                    'quantity' => 1,
+                ],
+            ],
+            'mode' => 'payment',
+        ]);
+
+        return [
+            'id' => $session->id,
+            'url' => $session->url
+        ];
     }
 
     private function checkSessionById(string $sessionId): Session
