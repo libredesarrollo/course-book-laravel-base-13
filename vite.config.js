@@ -13,6 +13,9 @@ export default defineConfig({
                 'resources/css/vue.css',
                 'resources/js/app.js',
                 'resources/js/vue/main.js',
+                // ckeditor
+                'resources/css/ckeditor.css',
+                'resources/js/ckeditor.js'
             ],
             refresh: true,
         }),

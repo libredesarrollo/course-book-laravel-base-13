@@ -14,18 +14,20 @@ class StripeController extends Controller
 {
 
     // Orden/Session
-    function createSession(string $priceId, string $successURL = 'http://larafirststeps.test/vue/stripe/success', string $cancelUrl = 'http://laravelbaseapi.test/vue/stripe/cancel')
+    function createSession(string $priceId, string $successURL = 'http://larafirststep.test/vue/stripe/success', string $cancelUrl = 'http://larafirststep.test/vue/stripe/cancel')
     {
       
         $session = Checkout::guest()->create($priceId, [
-            // 'mode' => 'payment',
-            'mode' => 'subscription',
+             'mode' => 'payment',
+            // 'mode' => 'subscription',
             'success_url' => $successURL . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $cancelUrl
         ]);
-
-        // return $session; // retorna la pagina de https://checkout.stripe.com/c/pay/c
-        return $session->id;
+        // return $session;
+        return response()->json([
+            'id' => $session->id,
+            'url' => $session->url
+        ]);
     }
 
     private function checkSessionById(string $sessionId): Session
@@ -53,7 +55,7 @@ class StripeController extends Controller
             // return response()->json('payment success');
         }
         return json_encode($session);
-        return response()->json('payment not success', 400);
+        // return response()->json('payment not success', 400);
     }
 
     function checkPaymentIntentByid(string $paymentIntentId)

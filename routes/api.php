@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\StripeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,10 @@ Route::group(['as' => 'api.',], function () {
 
 Route::post('user/login',[App\Http\Controllers\Api\UserController::class, 'login']);
 Route::post('user/logout/{tokenId}',[App\Http\Controllers\Api\UserController::class, 'logout']);
+
+// stripe
+Route::get('stripe/create-session/{priceId}/{successURL?}/{cancelUrl?}', [StripeController::class, 'createSession']);
+Route::get('stripe/get-session/{sessionId}', [StripeController::class, 'checkPayment']);
+Route::get('stripe/get-payment-intent/{paymentIntentId}', [StripeController::class, 'checkPaymentIntentByid']);
+Route::get('stripe/customer', [StripeController::class, 'stripeCustomer']);
+Route::get('stripe/balance', [StripeController::class, 'stripeBalance']);

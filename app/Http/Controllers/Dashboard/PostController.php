@@ -22,9 +22,9 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        if(!Auth::user()->hasPermissionTo('editor.post.index')){
-            return abort(403);
-        }
+        // if(!Auth::user()->hasPermissionTo('editor.post.index')){
+        //     return abort(403);
+        // }
         // dd(hello2('Andres'));
         // $posts = Post::with('category')->paginate(20);
         $posts = Post::paginate(20);
@@ -94,9 +94,9 @@ class PostController extends Controller
         // }
 
         // Politica
-        if (! Gate::allows('update', $post)) {
-            abort(403, 'FUERA DE AQUI YANKI!!');
-        }
+        // if (! Gate::allows('update', $post)) {
+        //     abort(403, 'FUERA DE AQUI YANKI!!');
+        // }
 
         // dd(Gate::check('create', $post));
         // dd(Gate::any(['create','update'], $post));
@@ -126,9 +126,9 @@ class PostController extends Controller
     public function update(PutRequest $request, Post $post): RedirectResponse
     {
 
-        if (! Gate::allows('update', $post)) {
-            return abort(403);
-        }
+        // if (! Gate::allows('update', $post)) {
+        //     return abort(403);
+        // }
 
         $data = $request->validated();
         if (isset($data['image'])) {

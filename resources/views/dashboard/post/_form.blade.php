@@ -30,7 +30,10 @@
     </div>
     <div>
         <label class="form-label" for="">Content</label>
-        <textarea class="form-input" name="content">{{ old('content', $post->content) }}</textarea>
+        <textarea class="form-input hidden! content" name="content">{{ old('content', $post->content) }}</textarea>
+        <div id="editor">
+            {!! old('content', $post->content) !!}
+        </div>
     </div>
 
     <div>
@@ -50,3 +53,11 @@
 <div class="flex flex-row-reverse">
     <button class="btn btn-primary mt-3" type="submit">Send</button>
 </div>
+
+@vite(['resources/css/ckeditor.css', 'resources/js/ckeditor.js'])
+
+<script>
+    document.querySelector('#myForm').addEventListener('submit', function(e) {
+        document.querySelector('.content').value = editor.getData()
+    })
+</script>
