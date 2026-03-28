@@ -33,9 +33,11 @@ class ProfileController extends Controller
             'avatar' => 'nullable|image|max:2048', // Imagen opcional, máx 2MB
         ]);
 
-        $profileData = [
-            'address' => $validated['address'] ?? null,
-        ];
+        $profileData = [];
+
+        if ($request->has('address')) {
+            $profileData['address'] = $validated['address'];
+        }
 
         // Manejo de subida de Avatar
         if ($request->hasFile('avatar')) {
