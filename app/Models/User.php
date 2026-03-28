@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -18,14 +19,8 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens ,HasRoles;
-    // protected $table = 'users';
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -34,20 +29,23 @@ class User extends Authenticatable
         ];
     }
 
-    function isAdmin(): bool{
-        return $this->role == "admin";
+    public function isAdmin(): bool
+    {
+        return $this->rol === 'admin';
     }
 
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    function profile()  {
+    public function profile(): HasOne
+    {
         return $this->hasOne(Profile::class);
     }
 
-     public function setPasswordAttribute($value) {
+    public function setPasswordAttribute(string $value): void
+    {
         $this->attributes['password'] = Hash::make($value);
     }
 }

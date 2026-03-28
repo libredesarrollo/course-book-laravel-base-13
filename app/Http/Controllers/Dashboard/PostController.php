@@ -50,9 +50,7 @@ class PostController extends Controller
     public function create(): View
     {
 
-   
-
-        $categories = Category::pluck('id', 'title');
+        $categories = Category::pluck('title', 'id');
         $post = new Post;
 
         return view('dashboard.post.create', compact('categories', 'post'));
@@ -115,7 +113,7 @@ class PostController extends Controller
 
         // Gate::authorize('update', $post);
 
-        $categories = Category::pluck('id', 'title');
+        $categories = Category::pluck('title', 'id');
 
         return view('dashboard.post.edit', compact('categories', 'post'));
     }
@@ -131,14 +129,23 @@ class PostController extends Controller
         // }
 
         $data = $request->validated();
-        if (isset($data['image'])) {
-            $data['image'] = time().'.'.$data['image']->extension();
-            $request->image->move(public_path('image'), $data['image']);
-        }
+        $data['image'] = $this->handleImageUpload($request, $data);
         Cache::forget('post_show_'.$post->id);
         $post->update($data);
 
         return to_route('post.index')->with('status', 'Registro Actualizado');
+    }
+
+    private function handleImageUpload($request, array $data): ?string
+    {
+        if (! isset($data['image'])) {
+            return null;
+        }
+
+        $filename = time().'.'.$data['image']->extension();
+        $request->image->move(public_path('image'), $filename);
+
+        return $filename;
     }
 
     /**

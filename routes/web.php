@@ -99,53 +99,37 @@ Route::get('/vue/{n1?}/{n2?}/{n3?}', function () {
     return view('vue');
 });
 
-// STRIPE
-route::get('/stripe/set-payment-method', function () {
-    // auth()->user()
-    $user = User::find(1);
-    return view('stripe.payment-method', ['intent' => $user->createSetupIntent()]);
-});
-route::get('/stripe/get-payment-method', function () {
-    // auth()->user()
-    $user = User::find(1);
-    //dd($user->findPaymentMethod("pm_1Qg1XiCWud7Ri9mJzUVwMsoo"));
-    // dd($user->defaultPaymentMethod());
-    dd($user->paymentMethods());
-});
-route::get('/stripe/delete-payment-method', function () {
-    // auth()->user()
-    $user = User::find(1);
-    // $paymentMethod = $user->findPaymentMethod("pm_1Qg1XiCWud7Ri9mJzUVwMsoo");
-    // $paymentMethod->delete();
+// STRIPE (protegidas por auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/stripe/set-payment-method', function () {
+        return view('stripe.payment-method', ['intent' => auth()->user()->createSetupIntent()]);
+    });
 
-    $user->deletePaymentMethods();
-});
-route::get('/stripe/create-payment-intent', function () {
-    $user = User::find(1);
-    $payment = $user->pay(100);
+    Route::get('/stripe/get-payment-method', function () {
+        dd(auth()->user()->paymentMethods());
+    });
 
-    return view('stripe.payment-confirm', ['clientSecret' => $payment->client_secret]);
-});
-route::get('/stripe/new-subcription', function () {
-    // auth()->user()
-    $user = User::find(1);
+    Route::get('/stripe/delete-payment-method', function () {
+        auth()->user()->deletePaymentMethods();
+    });
 
-    dd(
-        $user->newSubscription(
-            'default2',
-            'price_1QYPNDCWud7Ri9mJPPPtwAnj'
-        )->quantity(3)
-        ->create('pm_1Qh7GJCWud7Ri9mJr1sC38w8')
-    );
-});
-route::get('/stripe/is-subcribed', function () {
-    // auth()->user()
-    $user = User::find(1);
+    Route::get('/stripe/create-payment-intent', function () {
+        $payment = auth()->user()->pay(100);
 
-    dd(
-        // $user->subscribed('default')
-        // $user->subscription('default')->onGracePeriod()
-        // $user->subscription('default')->canceled()
-        $user->subscription('default')->ended()
-    );
+        return view('stripe.payment-confirm', ['clientSecret' => $payment->client_secret]);
+    });
+
+    Route::get('/stripe/new-subcription', function () {
+        dd(
+            auth()->user()->newSubscription(
+                'default2',
+                'price_1QYPNDCWud7Ri9mJPPPtwAnj'
+            )->quantity(3)
+                ->create('pm_1Qh7GJCWud7Ri9mJr1sC38w8')
+        );
+    });
+
+    Route::get('/stripe/is-subcribed', function () {
+        dd(auth()->user()->subscription('default')->ended());
+    });
 });
