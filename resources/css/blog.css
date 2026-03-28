@@ -6,12 +6,86 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    
+    /* Elegant Blog Palette */
+    --color-primary: #333333;
+    --color-accent: #3a8ee6;
+    --color-surface: #ffffff;
+    --color-muted: #f8f9fa;
+    --color-border: #eef1f6;
+    --color-text-main: #2c3e50;
+    --color-text-light: #5e6d82;
 }
 
 @import './components/button.css';
-/* @import './components/form.css'; */
 @import './components/container.css';
 @import './components/card.css';
-/* @import './components/boxs.css'; */
+
+/* Redesign Overrides */
+@layer base {
+    body {
+        background-color: #fafbfc;
+        color: var(--color-text-main);
+        font-family: var(--font-sans);
+        line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--color-primary);
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+}
+
+@layer components {
+    .container {
+        @apply max-w-4xl mx-auto px-4;
+    }
+
+    .card {
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        padding: 2rem;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn {
+        border-radius: 9999px !important;
+        transition: all 0.3s ease-in-out !important;
+        font-weight: 600 !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    .btn-primary {
+        background-color: var(--color-accent) !important;
+        border-color: var(--color-accent) !important;
+        box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39) !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #2c71b6 !important;
+        box-shadow: 0 6px 20px rgba(0, 118, 255, 0.23) !important;
+    }
+
+    /* Article Specifics */
+    .prose {
+        max-width: 100%;
+        font-size: 1.125rem;
+    }
+
+    .article-meta {
+        color: var(--color-text-light);
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+    }
+}

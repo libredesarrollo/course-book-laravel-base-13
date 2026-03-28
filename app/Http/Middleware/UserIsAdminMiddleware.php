@@ -19,7 +19,7 @@ class UserIsAdminMiddleware
         // dd(Auth::user());
         // dd(auth()->user());
         // if(Auth::user()->role != 'admin'){
-        if(auth()->user() && auth()->user()->role != 'admin'){
+        if (auth()->user() && auth()->user()->role == 'admin') {
             return to_route('home');
         }
 
