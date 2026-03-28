@@ -23,7 +23,7 @@
                             <a class="btn-sm btn-secondary" href="{{ route('category.show', $category) }}">Show</a>
                             <a class="btn-sm btn-secondary"  href="{{ route('category.edit', $category) }}">Edit</a>
 
-                            <form action="{{ route('category.destroy', $category) }}" method="POST">
+                            <form action="{{ route('category.destroy', $category) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta categoría?')">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn-sm btn-danger" type="submit">Delete</button>

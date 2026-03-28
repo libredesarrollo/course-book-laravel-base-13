@@ -42,7 +42,7 @@
                             {{ $p->category->title }}
                         </td>
                         <td class="flex gap-2">
-                            <form action="{{ route('post.destroy', $p) }}">
+                            <form action="{{ route('post.destroy', $p) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este post?')">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn-sm btn-danger" type="submit">Delete</button>

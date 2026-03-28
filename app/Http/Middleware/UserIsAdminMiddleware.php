@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserIsAdminMiddleware
@@ -16,10 +15,7 @@ class UserIsAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // dd(Auth::user());
-        // dd(auth()->user());
-        // if(Auth::user()->role != 'admin'){
-        if (auth()->user() && auth()->user()->role == 'admin') {
+        if (! auth()->user() || auth()->user()->role != 'admin') {
             return to_route('home');
         }
 
