@@ -1,6 +1,8 @@
 <div class="card">
   
-        {{ $changeTitle() }}
+        {{-- {{ $changeTitle() }} --}}
+        <h1>{{ $post->title }}</h1>
+
 
 
     <header class="mb-8 border-b border-gray-100 pb-8">

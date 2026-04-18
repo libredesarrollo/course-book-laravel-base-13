@@ -12,7 +12,9 @@ use Stripe\Stripe;
 class StripeController extends Controller
 {
     // Orden/Session
-    public function createSession(string $priceId, string $successURL, string $cancelUrl)
+    public function createSession(string $priceId, 
+    string $successURL="http://larafirststeps.test/vue/stripe/success", 
+    string $cancelUrl="http://larafirststeps.test/vue/stripe/cancel")
     {
 
         $session = Checkout::guest()->create($priceId, [

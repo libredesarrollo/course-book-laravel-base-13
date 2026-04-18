@@ -13,7 +13,7 @@
         <label class="form-label" for="">Category</label>
         <select class="form-input" name="category_id">
             <option value=""></option>
-            @foreach ($categories as $title => $id)
+            @foreach ($categories as $id => $title)
                 <option {{ old('category_id', $post->category_id) == $id ? 'selected' : '' }}
                     value="{{ $id }}">
                     {{ $title }}

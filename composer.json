@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "artesaos/seotools": "^1.4",
         "laravel/cashier": "*",
         "laravel/fortify": "*",
         "laravel/framework": "^13.0",

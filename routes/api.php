@@ -32,10 +32,10 @@ Route::post('user/login', [UserController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('user/logout/{tokenId}', [UserController::class, 'logout']);
-
+});
     Route::get('stripe/create-session/{priceId}/{successURL?}/{cancelUrl?}', [StripeController::class, 'createSession']);
     Route::get('stripe/get-session/{sessionId}', [StripeController::class, 'checkPayment']);
     Route::get('stripe/get-payment-intent/{paymentIntentId}', [StripeController::class, 'checkPaymentIntentByid']);
     Route::get('stripe/customer', [StripeController::class, 'stripeCustomer']);
     Route::get('stripe/balance', [StripeController::class, 'stripeBalance']);
-});
+
