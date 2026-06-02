@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Dashboard\user\role\permission;
 
+use App\Helpers\DemoMode;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -28,6 +29,7 @@ class Manage extends Component
 
     public function handleRole(User $user)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $role = Role::findOrFail(request('role'));
         $user->assignRole($role);
@@ -43,6 +45,7 @@ class Manage extends Component
 
     function deleteRole(User $user)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $role = Role::findOrFail(request('role'));
         $user->removeRole($role);
@@ -60,6 +63,7 @@ class Manage extends Component
 
     public function handlePermission(User $user)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $permission = Permission::findOrFail(request('permission'));
         $user->givePermissionTo($permission);
@@ -75,6 +79,7 @@ class Manage extends Component
 
     function deletePermission(User $user)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $permission = Permission::findOrFail(request('permission'));
         $user->revokePermissionTo($permission);

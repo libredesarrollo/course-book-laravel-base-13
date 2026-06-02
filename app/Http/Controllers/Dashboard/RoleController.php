@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helpers\DemoMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\PutRequest;
 use App\Http\Requests\Role\StoreRequest;
@@ -27,6 +28,7 @@ class RoleController extends Controller
 
     public function store(StoreRequest $request)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         Role::create($request->validated());
         return to_route('role.index')->with('status', 'Role created');
@@ -46,6 +48,7 @@ class RoleController extends Controller
 
     public function update(PutRequest $request, Role $role)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $role->update($request->validated());
         return to_route('role.index')->with('status', 'Role updated');
@@ -53,6 +56,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $role->delete();
         return to_route('role.index')->with('status', 'Role delete');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helpers\DemoMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\StoreRequest;
 use App\Http\Requests\Category\PutRequest;
@@ -33,6 +34,7 @@ class CategoryController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        DemoMode::check();
         Category::create($request->validated());
         return to_route('category.index')->with('status','Registro Creado');   
     }
@@ -58,6 +60,7 @@ class CategoryController extends Controller
      */
     public function update(PutRequest $request, Category $category)
     {
+        DemoMode::check();
         $category->update($request->validated());
         return to_route('category.index')->with('status','Registro Actualizado');
     }
@@ -67,6 +70,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        DemoMode::check();
         $category->delete();
         return to_route('category.index')->with('status','Registro Eliminado');
     }

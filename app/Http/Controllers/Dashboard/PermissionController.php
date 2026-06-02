@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helpers\DemoMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Permission\PutRequest;
 use App\Http\Requests\Permission\StoreRequest;
@@ -27,6 +28,7 @@ class PermissionController extends Controller
 
     public function store(StoreRequest $request)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         Permission::create($request->validated());
         return to_route('permission.index')->with('status', 'Permission created');
@@ -46,6 +48,7 @@ class PermissionController extends Controller
 
     public function update(PutRequest $request, Permission $permission)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $permission->update($request->validated());
         return to_route('permission.index')->with('status', 'Permission updated');
@@ -53,6 +56,7 @@ class PermissionController extends Controller
 
     public function destroy(Permission $permission)
     {
+        DemoMode::check();
         Gate::authorize('is-admin');
         $permission->delete();
         return to_route('permission.index')->with('status', 'Permission delete');

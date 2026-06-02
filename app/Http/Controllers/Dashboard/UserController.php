@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helpers\DemoMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\PutRequest;
 use App\Http\Requests\User\StoreRequest;
@@ -36,6 +37,8 @@ class UserController extends Controller
 
     public function store(StoreRequest $request)
     {
+        DemoMode::check();
+
         if (! auth()->user()->hasPermissionTo('editor.user.create')) {
             return abort(403);
         }
@@ -64,6 +67,7 @@ class UserController extends Controller
 
     public function update(PutRequest $request, User $user)
     {
+        DemoMode::check();
         Gate::authorize('update-view-user-admin', [$user, 'editor.user.update']);
         $user->update($request->validated());
 
@@ -72,6 +76,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        DemoMode::check();
         Gate::authorize('update-view-user-admin', [$user, 'editor.user.destroy']);
         $user->delete();
 

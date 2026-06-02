@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Blog;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\User;
 use Artesaos\SEOTools\Facades\SEOMeta;
+use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
@@ -13,6 +15,7 @@ class BlogController extends Controller
      */
     public function index()
     {
+        // Auth::login(User::find(1));
         $posts = Post::where('posted', 'yes')->paginate(2);
         
         SEOMeta::setTitle('Blog');

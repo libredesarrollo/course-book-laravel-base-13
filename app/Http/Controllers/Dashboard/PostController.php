@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helpers\DemoMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PutRequest;
 use App\Http\Requests\Post\StoreRequest;
@@ -61,10 +62,7 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        // $post = Post::create($request->validated());
-
-        // $post = new Post($request->validated());
-        // auth()->user()->posts()->save($post);
+        DemoMode::check();
 
         auth()->user()->posts()->save(new Post($request->validated()));
 
@@ -123,10 +121,7 @@ class PostController extends Controller
      */
     public function update(PutRequest $request, Post $post): RedirectResponse
     {
-
-        // if (! Gate::allows('update', $post)) {
-        //     return abort(403);
-        // }
+        DemoMode::check();
 
         $data = $request->validated();
         $data['image'] = $this->handleImageUpload($request, $data);
@@ -153,6 +148,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
+        DemoMode::check();
+
         if (! Gate::allows('delete', $post)) {
             return abort(403);
         }
