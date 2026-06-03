@@ -92,7 +92,7 @@
                 Proyecto de presentación con módulo administrativo, blog público y ejemplos prácticos de Laravel 13.
             </p>
 
-            <ul>
+            <ul class="text-[#706f6c] dark:text-[#A1A09A]">
                 <li>User: admin@admin.com</li>
                 <li>Pass: !a5qRNEtVXyX3s</li>
             </ul>
