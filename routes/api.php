@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\StripeController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\TodoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,4 +39,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('stripe/get-payment-intent/{paymentIntentId}', [StripeController::class, 'checkPaymentIntentByid']);
     Route::get('stripe/customer', [StripeController::class, 'stripeCustomer']);
     Route::get('stripe/balance', [StripeController::class, 'stripeBalance']);
+
+    Route::get('demo/todo', [TodoController::class, 'store']);
 
