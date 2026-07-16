@@ -17,6 +17,16 @@ class PostController extends Controller
 {
     public function all():AnonymousResourceCollection
     {
+
+        // Post::where('posted', 'yes')->get();   // hits the DB, caches the result
+        // Post::where('posted', 'yes')->get();   // served from cache
+        // Post::count();                           // cached
+        // Post::find(1);                           // cached (per-row, see below)
+
+        // Post::create(['title' => 'Hello']);      // flushes Post's cache
+
+        // Post::where('posted', 'yes')->get();   // fresh from the DB again
+
         return PostResource::collection(Post::get());
     }
     public function index(): AnonymousResourceCollection

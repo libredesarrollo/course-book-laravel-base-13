@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
+use Wddyousuf\AutoCache\Traits\Cacheable;
+
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, Cacheable;
 
     protected $fillable = ['title', 'slug', 'content', 'category_id', 'description', 'posted', 'image', 'user_id'];
 

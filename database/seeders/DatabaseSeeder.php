@@ -20,18 +20,18 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Andres',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('12345'),
-        ]);
-        User::factory()->create([
-            'name' => 'Regular',
-            'email' => 'regular@regular.com',
-        ]);
-        //   $this->call(CategorySeeder::class);
+        // User::factory()->create([
+        //     'name' => 'Andres',
+        //     'email' => 'admin@admin.com',
+        //     'password' => Hash::make('12345'),
+        // ]);
+        // User::factory()->create([
+        //     'name' => 'Regular',
+        //     'email' => 'regular@regular.com',
+        // ]);
+        // //   $this->call(CategorySeeder::class);
 
-        Category::factory(10)->create();
-        Post::factory(30)->create();
+        // Category::factory(10)->create();
+        Post::factory(1)->create();
     }
 }

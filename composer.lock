@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "720441a05699fc948da38e37f4c481fe",
+    "content-hash": "0aab3958a0ad287eb9d27e4466db6991",
     "packages": [
         {
             "name": "artesaos/seotools",
@@ -6781,6 +6781,72 @@
                 }
             ],
             "time": "2024-11-21T01:49:47+00:00"
+        },
+        {
+            "name": "wddyousuf/eloquent-autocache",
+            "version": "v0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wddyousuf/eloquent-autocache.git",
+                "reference": "8920818f4d63cffdca4bea0984dfc9f80b220798"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wddyousuf/eloquent-autocache/zipball/8920818f4d63cffdca4bea0984dfc9f80b220798",
+                "reference": "8920818f4d63cffdca4bea0984dfc9f80b220798",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.0|^3.0",
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+                "phpunit/phpunit": "^10.0|^11.0|^12.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "AutoCache": "Wddyousuf\\AutoCache\\Facades\\AutoCache"
+                    },
+                    "providers": [
+                        "Wddyousuf\\AutoCache\\AutoCacheServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wddyousuf\\AutoCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Md. Yousuf Hossain",
+                    "email": "yousuf@hudsoncreativestudio.com"
+                }
+            ],
+            "description": "Automatic Eloquent model query caching for Laravel with self-flushing on create, update, and delete.",
+            "keywords": [
+                "cache",
+                "eloquent",
+                "laravel",
+                "model-caching",
+                "query-cache"
+            ],
+            "support": {
+                "issues": "https://github.com/wddyousuf/eloquent-autocache/issues",
+                "source": "https://github.com/wddyousuf/eloquent-autocache/tree/v0.2.2"
+            },
+            "time": "2026-07-15T12:37:43+00:00"
         }
     ],
     "packages-dev": [

@@ -21,6 +21,6 @@ class CategorySeeder extends Seeder
         //     ]);
         // }
 
-        Category::factory(10)->create();
+        Category::factory(1)->create();
     }
 }
