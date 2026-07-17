@@ -16,6 +16,7 @@
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
+        "spatie/laravel-backup": "^10.3",
         "spatie/laravel-permission": "*",
         "wddyousuf/eloquent-autocache": "^0.2.2"
     },
