@@ -2,15 +2,19 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\SSEController;
 use App\Http\Controllers\Api\StripeController;
-use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TodoController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+// Server-Sent Events: flujo unidireccional de notificaciones en tiempo real
+Route::get('/v1/events', [SSEController::class, 'stream']);
 
 Route::get('post/all', [PostController::class, 'all']);
 Route::get('post/{post}', [PostController::class, 'show']);
@@ -34,11 +38,10 @@ Route::post('user/login', [UserController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('user/logout/{tokenId}', [UserController::class, 'logout']);
 });
-    Route::get('stripe/create-session/{priceId}/{successURL?}/{cancelUrl?}', [StripeController::class, 'createSession']);
-    Route::get('stripe/get-session/{sessionId}', [StripeController::class, 'checkPayment']);
-    Route::get('stripe/get-payment-intent/{paymentIntentId}', [StripeController::class, 'checkPaymentIntentByid']);
-    Route::get('stripe/customer', [StripeController::class, 'stripeCustomer']);
-    Route::get('stripe/balance', [StripeController::class, 'stripeBalance']);
+Route::get('stripe/create-session/{priceId}/{successURL?}/{cancelUrl?}', [StripeController::class, 'createSession']);
+Route::get('stripe/get-session/{sessionId}', [StripeController::class, 'checkPayment']);
+Route::get('stripe/get-payment-intent/{paymentIntentId}', [StripeController::class, 'checkPaymentIntentByid']);
+Route::get('stripe/customer', [StripeController::class, 'stripeCustomer']);
+Route::get('stripe/balance', [StripeController::class, 'stripeBalance']);
 
-    Route::get('demo/todo', [TodoController::class, 'store']);
-
+Route::get('demo/todo', [TodoController::class, 'store']);

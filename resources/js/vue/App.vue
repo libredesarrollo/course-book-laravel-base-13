@@ -41,6 +41,10 @@
                             List
                         </router-link>
 
+                        <router-link :to="{'name': 'sse'}" class='inline-flex uppercase border-b-2 text-sm-leading-5 mx-3 px-4 py-1 text-gray-600 text-center font-bold hover:text-gray-900 hover:border-gray-700 hover:-translate-y-1 durarion-150 transition-all'>
+                            SSE
+                        </router-link>
+
                         <o-button
                             v-if="$root.isLoggedIn"
                             variant="danger"

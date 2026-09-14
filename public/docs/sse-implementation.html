@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE — Server-Sent Events en Laravel + Vue 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: '#18181b',
+              accent: '#22c55e',
+              muted: '#71717a',
+              surface: '#27272a',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { background: #09090b; }
+      pre { background: #18181b; border: 1px solid #3f3f46; border-radius: 0.5rem; overflow-x: auto; }
+      pre code { color: #d4d4d8; }
+      .kw { color: #c084fc; }
+      .fn { color: #60a5fa; }
+      .str { color: #4ade80; }
+      .cmt { color: #52525b; font-style: italic; }
+      .var { color: #fb923c; }
+      .tag { color: #f472b6; }
+      .attr { color: #a78bfa; }
+      .html-val { color: #4ade80; }
+      .num { color: #facc15; }
+      .bool { color: #f472b6; }
+    </style>
+</head>
+<body class="text-zinc-300 antialiased leading-relaxed">
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HEADER
+     ══════════════════════════════════════════════════════════════════ -->
+<header class="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-white tracking-tight">Server-Sent Events (SSE)</h1>
+      <p class="text-sm text-muted mt-1">Implementación en Laravel 13 + Vue 3 — Notificaciones en tiempo real</p>
+    </div>
+    <span class="text-xs font-mono bg-accent/10 text-accent px-3 py-1 rounded-full border border-accent/20">
+      larafirststep.test
+    </span>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 py-10 space-y-16">
+
+<!-- ══════════════════════════════════════════════════════════════════
+     1. QUÉ ES SSE
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    1. ¿Qué es Server-Sent Events?
+  </h2>
+
+  <p class="mb-4">
+    <strong class="text-white">Server-Sent Events (SSE)</strong> es una tecnología que permite al servidor
+    de Laravel enviar actualizaciones en tiempo real a la aplicación Vue a través de una
+    <em>sola conexión HTTP abierta</em>.
+  </p>
+
+  <div class="grid sm:grid-cols-2 gap-4 mb-6">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-2 h-2 rounded-full bg-accent"></span>
+        <h3 class="text-white font-medium text-sm">Ventajas de SSE</h3>
+      </div>
+      <ul class="text-sm space-y-1 text-zinc-400">
+        <li>• Funciona sobre HTTP estándar</li>
+        <li>• No requiere servidor extra (Pusher, Reverb…)</li>
+        <li>• Reconexión automática integrada en el navegador</li>
+        <li>• Parseo automático del formato de datos</li>
+        <li>• Compatible con todos los navegadores modernos</li>
+      </ul>
+    </div>
+    <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+        <h3 class="text-white font-medium text-sm">Limitaciones</h3>
+      </div>
+      <ul class="text-sm space-y-1 text-zinc-400">
+        <li>• Unidireccional (solo servidor → cliente)</li>
+        <li>• Máximo 6 conexiones por dominio (HTTP/1.1)</li>
+        <li>• No ideal para alta frecuencia (&lt;1s entre eventos)</li>
+        <li>• Blocking de worker PHP durante el stream</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5 mb-4">
+    <h3 class="text-white font-medium text-sm mb-3">SSE vs WebSockets</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-zinc-700 text-zinc-400">
+            <th class="text-left py-2 pr-4">Característica</th>
+            <th class="text-left py-2 pr-4">SSE</th>
+            <th class="text-left py-2">WebSockets</th>
+          </tr>
+        </thead>
+        <tbody class="text-zinc-300">
+          <tr class="border-b border-zinc-800/50">
+            <td class="py-2 pr-4">Dirección</td>
+            <td class="py-2 pr-4"><span class="text-accent">Unidireccional</span></td>
+            <td class="py-2">Bidireccional</td>
+          </tr>
+          <tr class="border-b border-zinc-800/50">
+            <td class="py-2 pr-4">Protocolo</td>
+            <td class="py-2 pr-4">HTTP/1.1 o HTTP/2</td>
+            <td class="py-2">ws:// o wss://</td>
+          </tr>
+          <tr class="border-b border-zinc-800/50">
+            <td class="py-2 pr-4">Reconexión</td>
+            <td class="py-2 pr-4"><span class="text-accent">Automática (EventSource)</span></td>
+            <td class="py-2">Manual (implementar)</td>
+          </tr>
+          <tr class="border-b border-zinc-800/50">
+            <td class="py-2 pr-4">Infraestructura</td>
+            <td class="py-2 pr-4"><span class="text-accent">HTTP estándar</span></td>
+            <td class="py-2">Pusher, Reverb, Socket.io…</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4">Complejidad</td>
+            <td class="py-2 pr-4"><span class="text-accent">Baja</span></td>
+            <td class="py-2">Media-Alta</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     2. ARQUITECTURA
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    2. Arquitectura del flujo
+  </h2>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-6 font-mono text-sm leading-relaxed overflow-x-auto">
+<pre class="!border-0 !bg-transparent !rounded-none !p-0"><code><span class="cmt">┌────────────┐       GET /api/v1/events        ┌────────────────┐</span>
+<span class="cmt">│            │ ───────────────────────────────▶ │                │</span>
+<span class="cmt">│            │                                  │    Laravel     │</span>
+<span class="cmt">│   Vue 3    │   HTTP 200                       │  (PHP Worker)  │</span>
+<span class="cmt">│  Browser   │ ◀── Content-Type: text/event-... │                │</span>
+<span class="cmt">│            │                                  │                │</span>
+<span class="cmt">│            │   data: {"msg":"Notif #1"}\n\n   │  sleep(2) × 10 │</span>
+<span class="cmt">│            │   data: {"msg":"Notif #2"}\n\n   │                │</span>
+<span class="cmt">│  EventSource  data: {"msg":"Notif #3"}\n\n   │  → event:      │</span>
+<span class="cmt">│  .onmessage   ...                            │    closed       │</span>
+<span class="cmt">│            │   event: closed\n\n               │                │</span>
+<span class="cmt">│            │ ──── connection.close() ──────▶ │  flush()       │</span>
+<span class="cmt">└────────────┘                                  └────────────────┘</span></code></pre>
+  </div>
+
+  <ol class="list-decimal list-inside space-y-3 mt-6 text-sm">
+    <li>El cliente (Vue) abre una conexión HTTP normal hacia <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">/api/v1/events</code>.</li>
+    <li>Laravel no cierra la respuesta: establece la cabecera <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">Content-Type: text/event-stream</code>.</li>
+    <li>En un bucle, envía datos formateados como <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">data: {JSON}\n\n</code>.</li>
+    <li>El <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">EventSource</code> del navegador recibe cada evento y ejecuta <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">onmessage</code>.</li>
+    <li>Al terminar, el servidor envía un evento <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">event: closed</code> y cierra la conexión.</li>
+    <li>El cliente llama <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">EventSource.close()</code> para limpiar el socket.</li>
+  </ol>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     3. BACKEND — CONTROLADOR
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    3. Backend — Controlador Laravel
+  </h2>
+
+  <p class="mb-4 text-sm">
+    Archivo: <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">app/Http/Controllers/Api/SSEController.php</code>
+  </p>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/50">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-2 text-xs text-zinc-500 font-mono">SSEController.php</span>
+    </div>
+<pre class="!border-0 !rounded-none !m-0"><code><span class="kw">&lt;?php</span>
+
+<span class="kw">namespace</span> App\Http\Controllers\Api;
+
+<span class="kw">use</span> App\Http\Controllers\Controller;
+<span class="kw">use</span> Illuminate\Http\Request;
+<span class="kw">use</span> Symfony\Component\HttpFoundation\StreamedResponse;
+
+<span class="kw">class</span> <span class="fn">SSEController</span> <span class="kw">extends</span> Controller
+{
+    <span class="kw">public function</span> <span class="fn">stream</span>(): StreamedResponse
+    {
+        <span class="kw">return</span> <span class="fn">response</span>()-&gt;<span class="fn">stream</span>(<span class="kw">function</span> () {
+            <span class="cmt">// Desactivar el buffering de PHP para enviar datos al instante</span>
+            <span class="kw">if</span> (<span class="fn">ob_get_level</span>() &gt; <span class="num">0</span>) {
+                <span class="fn">ob_end_flush</span>();
+            }
+            <span class="fn">flush</span>();
+
+            <span class="cmt">// Simulamos envío de 10 notificaciones</span>
+            <span class="kw">for</span> (<span class="var">$i</span> = <span class="num">1</span>; <span class="var">$i</span> &lt;= <span class="num">10</span>; <span class="var">$i</span>++) {
+                <span class="kw">if</span> (<span class="fn">connection_aborted</span>()) {
+                    <span class="kw">break</span>;
+                }
+
+                <span class="kw">echo</span> <span class="var">$this</span>-&gt;<span class="fn">formatEvent</span>(<span class="var">$i</span>);
+                <span class="fn">flush</span>();
+                <span class="fn">sleep</span>(<span class="num">2</span>);
+            }
+
+            <span class="cmt">// Avisamos al cliente para que cierre la conexión limpiamente</span>
+            <span class="kw">echo</span> <span class="var">$this</span>-&gt;<span class="fn">formatClosedEvent</span>();
+            <span class="fn">flush</span>();
+        }, <span class="num">200</span>, <span class="var">$this</span>-&gt;<span class="fn">sseHeaders</span>());
+    }
+
+    <span class="cmt">/**
+     * Formato obligatorio de SSE: data: {JSON}\n\n
+     */</span>
+    <span class="kw">public function</span> <span class="fn">formatEvent</span>(<span class="kw">int</span> <span class="var">$iteration</span>): <span class="kw">string</span>
+    {
+        <span class="var">$data</span> = <span class="fn">json_encode</span>([
+            <span class="str">'message'</span> =&gt; <span class="str">"Notificación #</span><span class="var">{<span class="var">$iteration</span>}</span><span class="str">"</span>,
+            <span class="str">'time'</span>    =&gt; <span class="fn">now</span>()-&gt;<span class="fn">toTimeString</span>(),
+        ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+
+        <span class="kw">return</span> <span class="str">"data: </span><span class="var">{<span class="var">$data</span>}</span><span class="str">\n\n"</span>;
+    }
+
+    <span class="cmt">/**
+     * Evento final para cerrar la conexión sin reconexión automática.
+     */</span>
+    <span class="kw">public function</span> <span class="fn">formatClosedEvent</span>(): <span class="kw">string</span>
+    {
+        <span class="kw">return</span> <span class="str">"event: closed\ndata: {\"message\":\"Stream finalizado\"}\n\n"</span>;
+    }
+
+    <span class="cmt">/**
+     * Cabeceras SSE: no-cache, keep-alive, Nginx buffering off.
+     */</span>
+    <span class="kw">public function</span> <span class="fn">sseHeaders</span>(): <span class="kw">array</span>
+    {
+        <span class="kw">return</span> [
+            <span class="str">'Cache-Control'</span>         =&gt; <span class="str">'no-cache'</span>,
+            <span class="str">'Content-Type'</span>          =&gt; <span class="str">'text/event-stream; charset=utf-8'</span>,
+            <span class="str">'Connection'</span>            =&gt; <span class="str">'keep-alive'</span>,
+            <span class="str">'X-Accel-Buffering'</span>     =&gt; <span class="str">'no'</span>,
+        ];
+    }
+}</code></pre>
+  </div>
+
+  <h3 class="text-white font-medium text-sm mt-8 mb-3">Puntos clave del controlador</h3>
+
+  <div class="space-y-3 text-sm">
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">1</span>
+      <div>
+        <strong class="text-white">response()->stream()</strong> — Devuelve un <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">StreamedResponse</code> en vez de un JSON normal.
+        El callback se ejecuta línea por línea, sin cerrar el socket HTTP.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">2</span>
+      <div>
+        <strong class="text-white">ob_end_flush()</strong> — Desactiva el buffer de PHP para que cada
+        <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">echo</code> llegue al navegador inmediatamente, no al final del script.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">3</span>
+      <div>
+        <strong class="text-white">connection_aborted()</strong> — Si el usuario cierra la pestaña,
+        el worker PHP se detiene sin consumir recursos innecesariamente.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">4</span>
+      <div>
+        <strong class="text-white">X-Accel-Buffering: no</strong> — Obligatorio cuando se usa Nginx
+        (Laravel Herd usa Nginx internamente). Sin esto, Nginx almacena la respuesta completa antes de enviarla.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">5</span>
+      <div>
+        <strong class="text-white">event: closed</strong> — Evento con nombre (custom) que
+        permite al cliente saber cuándo el stream terminó y cerrar la conexión <em>antes</em> de que
+        el servidor la cierre, evitando el bucle de reconexión innecesario.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     4. BACKEND — RUTA
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    4. Backend — Ruta
+  </h2>
+
+  <p class="mb-4 text-sm">
+    Archivo: <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">routes/api.php</code>
+  </p>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/50">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-2 text-xs text-zinc-500 font-mono">routes/api.php</span>
+    </div>
+<pre class="!border-0 !rounded-none !m-0"><code><span class="kw">&lt;?php</span>
+
+<span class="kw">use</span> App\Http\Controllers\Api\SSEController;
+<span class="cmt">// ... otros imports</span>
+
+<span class="cmt">// Server-Sent Events: flujo unidireccional de notificaciones en tiempo real</span>
+<span class="fn">Route</span>::<span class="fn">get</span>(<span class="str">'/v1/events'</span>, [<span class="fn">SSEController</span>::<span class="kw">class</span>, <span class="str">'stream'</span>]);</code></pre>
+  </div>
+
+  <p class="mt-4 text-sm text-zinc-400">
+    Laravel prefixa automáticamente <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">/api</code> a todas las rutas en <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">routes/api.php</code>,
+    por lo que la URL final es <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">GET /api/v1/events</code>.
+    Se puede comprobar con <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">php artisan route:list --path=events</code>.
+  </p>
+
+  <div class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 mt-4 text-sm">
+    <p class="text-amber-300 font-medium mb-1">Nota sobre conexiones</p>
+    <p class="text-zinc-400">
+      La ruta <strong class="text-white">no usa middleware <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">auth:sanctum</code></strong>
+      para poder probarla fácilmente con un navegador. En producción, añadir autenticación para proteger el
+      endpoint. El <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">EventSource</code> del navegador
+      envía cookies de sesión automáticamente si la ruta está en el mismo dominio.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     5. FRONTEND — COMPONENTE VUE
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    5. Frontend — Componente Vue 3
+  </h2>
+
+  <p class="mb-4 text-sm">
+    Archivo: <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">resources/js/vue/componets/SSEComponent.vue</code>
+  </p>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/50">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-2 text-xs text-zinc-500 font-mono">SSEComponent.vue</span>
+    </div>
+<pre class="!border-0 !rounded-none !m-0"><code><span class="tag">&lt;template&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="html-val">"container mx-auto"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="html-val">"mt-6 mb-2 px-6 py-4 bg-white shadow-md rounded-md"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h1</span> <span class="attr">class</span>=<span class="html-val">"text-xl font-bold mb-4"</span><span class="tag">&gt;</span>
+        Notificaciones en vivo (SSE)
+      <span class="tag">&lt;/h1&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="html-val">"mb-4"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;o-button</span>
+          <span class="attr">v-if</span>=<span class="html-val">"!isConnected"</span>
+          <span class="attr">iconLeft</span>=<span class="html-val">"play"</span>
+          <span class="attr">variant</span>=<span class="html-val">"success"</span>
+          <span class="attr">@click</span>=<span class="html-val">"connect"</span>
+        <span class="tag">&gt;</span>Conectar<span class="tag">&lt;/o-button&gt;</span>
+
+        <span class="tag">&lt;o-button</span>
+          <span class="attr">v-else</span>
+          <span class="attr">iconLeft</span>=<span class="html-val">"stop"</span>
+          <span class="attr">variant</span>=<span class="html-val">"danger"</span>
+          <span class="attr">@click</span>=<span class="html-val">"disconnect"</span>
+        <span class="tag">&gt;</span>Desconectar<span class="tag">&lt;/o-button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;p</span> <span class="attr">v-if</span>=<span class="html-val">"isConnected"</span> <span class="attr">class</span>=<span class="html-val">"text-green-600 font-semibold"</span><span class="tag">&gt;</span>
+        Conectado al stream...
+      <span class="tag">&lt;/p&gt;</span>
+
+      <span class="tag">&lt;ul</span> <span class="attr">v-if</span>=<span class="html-val">"messages.length &gt; 0"</span> <span class="attr">class</span>=<span class="html-val">"space-y-2"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;li</span>
+          <span class="attr">v-for</span>=<span class="html-val">"(msg, index) in messages"</span>
+          <span class="attr">:key</span>=<span class="html-val">"index"</span>
+          <span class="attr">class</span>=<span class="html-val">"border rounded-md px-4 py-2"</span>
+        <span class="tag">&gt;</span>
+          <span class="tag">&lt;strong&gt;</span>[{{ msg.time }}]:<span class="tag">&lt;/strong&gt;</span> {{ msg.message }}
+        <span class="tag">&lt;/li&gt;</span>
+      <span class="tag">&lt;/ul&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/template&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+<span class="kw">export default</span> {
+  <span class="fn">data</span>() {
+    <span class="kw">return</span> {
+      messages: [],
+      eventSource: <span class="bool">null</span>,
+      isConnected: <span class="bool">false</span>,
+    }
+  },
+
+  <span class="fn">beforeUnmount</span>() {
+    <span class="var">this</span>.<span class="fn">disconnect</span>()
+  },
+
+  <span class="attr">methods</span>: {
+    <span class="fn">connect</span>() {
+      <span class="cmt">// EventSource gestiona la conexión y reconexión automática</span>
+      <span class="var">this</span>.eventSource = <span class="kw">new</span> <span class="fn">EventSource</span>(<span class="str">'/api/v1/events'</span>)
+
+      <span class="var">this</span>.eventSource.<span class="fn">addEventListener</span>(<span class="str">'open'</span>, () =&gt; {
+        <span class="var">this</span>.isConnected = <span class="bool">true</span>
+      })
+
+      <span class="cmt">// Se ejecuta por cada data: {JSON}\n\n</span>
+      <span class="var">this</span>.eventSource.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, (event) =&gt; {
+        <span class="var">this</span>.messages.<span class="fn">push</span>(JSON.<span class="fn">parse</span>(event.data))
+      })
+
+      <span class="cmt">// Escuchar evento custom "closed" del servidor</span>
+      <span class="var">this</span>.eventSource.<span class="fn">addEventListener</span>(<span class="str">'closed'</span>, () =&gt; {
+        <span class="var">this</span>.<span class="fn">disconnect</span>()
+      })
+
+      <span class="var">this</span>.eventSource.<span class="fn">addEventListener</span>(<span class="str">'error'</span>, () =&gt; {
+        <span class="kw">if</span> (<span class="var">this</span>.eventSource.readyState === <span class="num">2</span>) {
+          <span class="var">this</span>.isConnected = <span class="bool">false</span>
+        }
+      })
+    },
+
+    <span class="fn">disconnect</span>() {
+      <span class="kw">if</span> (<span class="var">this</span>.eventSource) {
+        <span class="var">this</span>.eventSource.<span class="fn">close</span>()
+        <span class="var">this</span>.eventSource = <span class="bool">null</span>
+        <span class="var">this</span>.isConnected = <span class="bool">false</span>
+      }
+    },
+  },
+}
+<span class="tag">&lt;/script&gt;</span></code></pre>
+  </div>
+
+  <h3 class="text-white font-medium text-sm mt-8 mb-3">Puntos clave del componente</h3>
+
+  <div class="space-y-3 text-sm">
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">1</span>
+      <div>
+        <strong class="text-white">new EventSource()</strong> — API nativa del navegador.
+        No requiere librerías externas. Gestiona la conexión HTTP y el parseo del formato
+        <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">data: ...</code> automáticamente.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">2</span>
+      <div>
+        <strong class="text-white">Reconexión automática</strong> — Si la red se cae,
+        <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">EventSource</code> reintenta
+        la conexión solo. Al recibir <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">event: closed</code>,
+        se cierra manualmente antes.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">3</span>
+      <div>
+        <strong class="text-white">beforeUnmount()</strong> — Cierra el socket cuando el
+        componente se destruye, evitando memory leaks.
+      </div>
+    </div>
+    <div class="flex items-start gap-3">
+      <span class="w-5 h-5 rounded bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mt-0.5">4</span>
+      <div>
+        <strong class="text-white">readyState === 2</strong> — Equivale a <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">EventSource.CLOSED</code>.
+        Solo actualizamos <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">isConnected</code> cuando
+        la conexión realmente se cerró (2), no cuando está reconectando (0).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     6. ROUTER Y NAVEGACIÓN
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    6. Router y navegación
+  </h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <div>
+      <p class="mb-3 text-sm">
+        Ruta agregada en <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">router.js</code>
+      </p>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+<pre class="!border-0 !rounded-none !m-0"><code><span class="kw">import</span> SSE <span class="kw">from</span> <span class="str">"./componets/SSEComponent.vue"</span>;
+
+<span class="cmt">// Agregado a la lista de rutas:</span>
+{
+  name: <span class="str">'sse'</span>,
+  path:  <span class="str">'/vue/sse'</span>,
+  component: SSE
+}</code></pre>
+      </div>
+    </div>
+
+    <div>
+      <p class="mb-3 text-sm">
+        Enlace en <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">App.vue</code>
+      </p>
+      <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+<pre class="!border-0 !rounded-none !m-0"><code><span class="tag">&lt;router-link</span>
+  <span class="attr">:to</span>=<span class="html-val">"{ name: 'sse' }"</span>
+  <span class="attr">class</span>=<span class="html-val">"...hover:text-gray-900..."</span>
+<span class="tag">&gt;</span>
+  SSE
+<span class="tag">&lt;/router-link&gt;</span></code></pre>
+      </div>
+      <p class="mt-3 text-sm text-zinc-400">
+        El enlace está disponible para todos los usuarios (sin condición <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">v-if="$root.isLoggedIn"</code>).
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     7. TESTING
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    7. Tests (Pest PHP)
+  </h2>
+
+  <p class="mb-4 text-sm">
+    Archivo: <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">tests/Feature/SSEControllerTest.php</code>
+  </p>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/50">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-2 text-xs text-zinc-500 font-mono">SSEControllerTest.php</span>
+    </div>
+<pre class="!border-0 !rounded-none !m-0"><code><span class="kw">&lt;?php</span>
+
+<span class="kw">use</span> App\Http\Controllers\Api\SSEController;
+
+<span class="fn">describe</span>(<span class="str">'SSEController'</span>, <span class="kw">function</span> () {
+    <span class="fn">describe</span>(<span class="str">'stream'</span>, <span class="kw">function</span> () {
+
+        <span class="fn">it</span>(<span class="str">'returns an SSE response with the correct headers'</span>, <span class="kw">function</span> () {
+            <span class="var">$response</span> = <span class="var">$this</span>-&gt;<span class="fn">get</span>(<span class="str">'/api/v1/events'</span>);
+
+            <span class="var">$response</span>-&gt;<span class="fn">assertOk</span>();
+            <span class="fn">expect</span>(<span class="var">$response</span>-&gt;headers-&gt;<span class="fn">get</span>(<span class="str">'Cache-Control'</span>))
+                -&gt;<span class="fn">toContain</span>(<span class="str">'no-cache'</span>);
+            <span class="var">$response</span>-&gt;<span class="fn">assertHeader</span>(
+                <span class="str">'Content-Type'</span>,
+                <span class="str">'text/event-stream; charset=utf-8'</span>
+            );
+            <span class="var">$response</span>-&gt;<span class="fn">assertHeader</span>(<span class="str">'Connection'</span>, <span class="str">'keep-alive'</span>);
+            <span class="var">$response</span>-&gt;<span class="fn">assertHeader</span>(<span class="str">'X-Accel-Buffering'</span>, <span class="str">'no'</span>);
+        });
+
+        <span class="fn">it</span>(<span class="str">'streams events in the SSE format'</span>, <span class="kw">function</span> () {
+            <span class="var">$controller</span> = <span class="kw">new</span> <span class="fn">SSEController</span>;
+
+            <span class="var">$event</span> = <span class="var">$controller</span>-&gt;<span class="fn">formatEvent</span>(<span class="num">1</span>);
+
+            <span class="fn">expect</span>(<span class="var">$event</span>)
+                -&gt;<span class="fn">toMatch</span>(<span class="str">'/^data: \{"message":"Notificación #1",/'</span>)
+                -&gt;<span class="fn">toEndWith</span>(<span class="str">"\n\n"</span>);
+        });
+
+        <span class="fn">it</span>(<span class="str">'encodes JSON without escaping accents'</span>, <span class="kw">function</span> () {
+            <span class="var">$controller</span> = <span class="kw">new</span> <span class="fn">SSEController</span>;
+
+            <span class="var">$json</span> = <span class="fn">trim</span>(<span class="fn">substr</span>(
+                <span class="var">$controller</span>-&gt;<span class="fn">formatEvent</span>(<span class="num">2</span>),
+                <span class="fn">strlen</span>(<span class="str">'data: '</span>)
+            ));
+
+            <span class="fn">expect</span>(<span class="fn">json_decode</span>(<span class="var">$json</span>, <span class="bool">true</span>))
+                -&gt;<span class="fn">toMatchArray</span>([
+                    <span class="str">'message'</span> =&gt; <span class="str">'Notificación #2'</span>,
+                ]);
+        });
+
+        <span class="fn">it</span>(<span class="str">'formats the closing event with the closed name'</span>, <span class="kw">function</span> () {
+            <span class="var">$controller</span> = <span class="kw">new</span> <span class="fn">SSEController</span>;
+
+            <span class="fn">expect</span>(<span class="var">$controller</span>-&gt;<span class="fn">formatClosedEvent</span>())
+                -&gt;<span class="fn">toStartWith</span>(<span class="str">'event: closed'</span>)
+                -&gt;<span class="fn">toContain</span>(<span class="str">'"message":"Stream finalizado"'</span>);
+        });
+    });
+});</code></pre>
+  </div>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-4 mt-4">
+    <p class="text-sm text-zinc-400 mb-2">Ejecutar los tests:</p>
+    <code class="text-accent text-sm">php artisan test --compact --filter=SSEControllerTest</code>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     8. CURL REAL
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    8. Verificación con curl
+  </h2>
+
+  <p class="mb-4 text-sm">Para comprobar el stream desde la terminal:</p>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/50">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-2 text-xs text-zinc-500 font-mono">terminal</span>
+    </div>
+<pre class="!border-0 !rounded-none !m-0"><code><span class="cmt"># Ver los primeros eventos (~6 segundos)</span>
+<span class="fn">curl</span> <span class="str">-sN --max-time 6</span> http://larafirststep.test/api/v1/events
+
+<span class="cmt"># Salida esperada:</span>
+data: <span class="str">{"message":"Notificación #1","time":"13:18:42"}</span>
+
+data: <span class="str">{"message":"Notificación #2","time":"13:18:44"}</span>
+
+
+<span class="cmt"># Ver los 10 eventos completos + el cierre (~24 segundos)</span>
+<span class="fn">curl</span> <span class="str">-sN --max-time 24</span> http://larafirststep.test/api/v1/events | tail -3
+
+<span class="cmt"># Últimas líneas:</span>
+event: closed
+data: <span class="str">{"message":"Stream finalizado"}</span></code></pre>
+  </div>
+
+  <div class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 mt-4 text-sm">
+    <p class="text-amber-300 font-medium mb-1">El flag -N</p>
+    <p class="text-zinc-400">
+      El flag <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">-N</code> (equivalente a
+      <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">--no-buffer</code>) le dice a curl que
+      muestre cada línea a medida que llega, sin esperar al buffer completo del servidor.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     9. NOTAS DE PRODUCCIÓN
+     ══════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    9. Notas para producción
+  </h2>
+
+  <div class="space-y-4 text-sm">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+      <h3 class="text-white font-medium mb-2">Worker blocking</h3>
+      <p class="text-zinc-400">
+        Durante el stream, el worker PHP queda bloqueado (ocupado) durante todo el ciclo
+        (<code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">sleep(2) × 10 = 20s</code>).
+        En producción con pocos workers (FPM), esto puede saturar el servidor.
+      </p>
+      <p class="text-zinc-400 mt-2">
+        <strong class="text-white">Soluciones:</strong>
+      </p>
+      <ul class="text-zinc-400 mt-1 space-y-1 ml-4">
+        <li>• Usar <strong class="text-white">Swoole</strong> o <strong class="text-white">Octane</strong> (servidor async)</li>
+        <li>• Publicar eventos vía <strong class="text-white">Redis Pub/Sub</strong> con <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">Redis::subscribe()</code></li>
+        <li>• Usar <strong class="text-white">Queues</strong> para escribir a un archivo/Redis y el stream lo lee en tiempo real</li>
+      </ul>
+    </div>
+
+    <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+      <h3 class="text-white font-medium mb-2">Rate limiting</h3>
+      <p class="text-zinc-400">
+        Las conexiones SSE duran mucho más que una petición normal. Añadir
+        <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">throttle</code> o limitar por
+        IP/usuario para evitar abusos.
+      </p>
+    </div>
+
+    <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+      <h3 class="text-white font-medium mb-2">Autenticación</h3>
+      <p class="text-zinc-400">
+        El <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">EventSource</code> envía cookies
+        automáticamente si la ruta está en el mismo dominio. Para APIs externas, usar
+        tokens en la URL o en un header personalizado (requiere configurar
+        <code class="bg-zinc-800 px-1 py-0.5 rounded text-accent">withCredentials: true</code>).
+      </p>
+    </div>
+
+    <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+      <h3 class="text-white font-medium mb-2">Escalabilidad</h3>
+      <p class="text-zinc-400">
+        Si necesitas broadcasting a miles de clientes simultáneos, considera
+        <strong class="text-white">Laravel Reverb</strong> con WebSockets o servicios como
+        <strong class="text-white">Pusher</strong>. SSE es ideal para dashboards internos,
+        notificaciones de admin o demos donde el volumen concurrente es moderado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     10. ESTRUCTURA DE ARCHIVOS
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="pb-16">
+  <h2 class="text-white text-xl font-semibold border-b border-zinc-800 pb-3 mb-6">
+    10. Archivos creados o modificados
+  </h2>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+    <div class="px-4 py-2.5 border-b border-zinc-800 bg-zinc-950/50">
+      <span class="text-xs text-zinc-500 font-mono">git status --short</span>
+    </div>
+<pre class="!border-0 !rounded-none !m-0"><code><span class="num"> M</span>  resources/js/vue/App.vue           <span class="cmt">← enlace "SSE" en el nav</span>
+<span class="num"> M</span>  resources/js/vue/router.js          <span class="cmt">← ruta /vue/sse</span>
+<span class="num"> M</span>  routes/api.php                      <span class="cmt">← GET /api/v1/events</span>
+<span class="num">??</span>  app/Http/Controllers/Api/SSEController.php  <span class="cmt">← controlador SSE</span>
+<span class="num">??</span>  resources/js/vue/componets/SSEComponent.vue <span class="cmt">← componente Vue</span>
+<span class="num">??</span>  tests/Feature/SSEControllerTest.php         <span class="cmt">← tests Pest (4)</span></code></pre>
+  </div>
+
+  <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-5 mt-6">
+    <h3 class="text-white font-medium text-sm mb-3">Pasos para probar</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm text-zinc-400">
+      <li>Asegurarse de que Vite esté corriendo: <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">npm run dev</code></li>
+      <li>Abrir la app en el navegador: <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">http://larafirststep.test/vue/sse</code></li>
+      <li>Hacer clic en <strong class="text-white">Conectar</strong></li>
+      <li>Ver las notificaciones llegando cada 2 segundos</li>
+      <li>Al finalizar (evento <code class="bg-zinc-800 px-1.5 py-0.5 rounded text-accent">closed</code>),
+          la conexión se cierra automáticamente</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-zinc-800 py-6 text-center text-xs text-zinc-600">
+  larafirststep.test · Laravel 13 + Vue 3 + Tailwind CSS 4
+</footer>
+
+</body>
+</html>

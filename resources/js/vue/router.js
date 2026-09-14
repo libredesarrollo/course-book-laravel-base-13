@@ -8,6 +8,7 @@ import Save from './componets/SaveComponent.vue'
 import Login from './componets/auth/LoginComponent.vue'
 import OnePayment from "./componets/stripe/OnePayment.vue";
 import StripeSuccess from "./componets/stripe/StripeSuccess.vue";
+import SSE from "./componets/SSEComponent.vue";
 
 const routes = [
     {
@@ -39,6 +40,11 @@ const routes = [
         name: 'cancel',
         path: '/vue/stripe/cancel',
         component: List
+    },
+    {
+        name: 'sse',
+        path: '/vue/sse',
+        component: SSE
     },
 ]
 
