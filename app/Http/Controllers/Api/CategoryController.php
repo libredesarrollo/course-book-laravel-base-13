@@ -16,7 +16,8 @@ class CategoryController extends Controller
 {
     public function all(): AnonymousResourceCollection
     { 
-        return CategoryResource::collection(Category::all());
+        return CategoryResource::collection(Category::remember(120)->get());
+        // return CategoryResource::collection(Category::all());
     }
     public function index(): AnonymousResourceCollection
     {

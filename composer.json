@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.3",
         "artesaos/seotools": "^1.4",
+        "ghostcompiler/laravel-model-caching": "^1.0",
         "laravel/cashier": "*",
         "laravel/fortify": "*",
         "laravel/framework": "^13.0",
