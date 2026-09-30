@@ -9,10 +9,14 @@ use Tests\TestCase;
 |--------------------------------------------------------------------------
 |
 | The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
+| case class. By default, that class is "PHPUnit\Framework\TestCase". More often than not,
+| you'll want to extend it to a custom base test case...
 |
 */
+
+// public/index.php and artisan both define this; the test bootstrap does not, and
+// mayaram/laravel-ocr references it when building the processing_time metadata.
+defined('LARAVEL_START') || define('LARAVEL_START', microtime(true));
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)

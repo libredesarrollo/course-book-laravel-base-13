@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\PermissionController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\OcrController;
 use App\Http\Controllers\Pruebas\CourseController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Middleware\LanguagePrefixMiddleware;
@@ -86,6 +87,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', UserIsAdminMiddl
         });
     });
 
+});
+
+// OCR
+Route::prefix('ocr')->name('ocr.')->group(function () {
+    Route::get('/', [OcrController::class, 'create'])->name('create');
+    Route::post('/', [OcrController::class, 'store'])->name('store');
 });
 
 // BLOG
