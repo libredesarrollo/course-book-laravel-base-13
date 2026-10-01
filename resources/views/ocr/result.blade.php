@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OCR - Texto extraído</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 py-10">
+@extends('dashboard.layout')
+
+@section('content')
     <div class="max-w-3xl mx-auto px-6 space-y-6">
         <div class="bg-white rounded-xl shadow p-6">
             <h1 class="text-2xl font-bold mb-6">Texto extraído</h1>
@@ -44,6 +38,4 @@
 <li>1. ocr_templates — plantillas que definen cómo extraer campos de un tipo de documento (ej. "mi factura tiene el número en X con regex Y").</li>
 <li>2. ocr_template_fields — los campos de cada plantilla (invoice_number, total, etc.) con su regex y posición.</li>
 <li>3. ocr_processed_documents — historial de documentos procesados: texto extraído, confianza, tiempo, a qué usuario pertenece.</li>
-
-</body>
-</html>
+@endsection

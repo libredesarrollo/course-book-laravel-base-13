@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OCR - Subir documento</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 py-10">
+@extends('dashboard.layout')
+
+@section('content')
     <div class="max-w-2xl mx-auto px-6">
         <div class="bg-white rounded-xl shadow p-6">
             <h1 class="text-2xl font-bold mb-2">OCR con Tesseract</h1>
@@ -34,8 +28,8 @@
                 <div>
                     <label for="document" class="block text-sm font-semibold mb-2">Documento</label>
                     <input id="document" name="document" type="file" required
-                           accept=".png,.jpg,.jpeg,.pdf,.tiff,.bmp"
-                           class="block w-full text-sm text-gray-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700">
+                            accept=".png,.jpg,.jpeg,.pdf,.tiff,.bmp"
+                            class="block w-full text-sm text-gray-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700">
                 </div>
 
                 <div>
@@ -55,5 +49,4 @@
             </form>
         </div>
     </div>
-</body>
-</html>
+@endsection
