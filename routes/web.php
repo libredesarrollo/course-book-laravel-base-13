@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\OcrController;
 use App\Http\Controllers\Pruebas\CourseController;
+use App\Http\Controllers\PythonAnalyzerController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Middleware\LanguagePrefixMiddleware;
 use App\Http\Middleware\UserIsAdminMiddleware;
@@ -24,6 +25,9 @@ Route::get('/', function () {
 
 // PRUEBAS
 Route::get('/blade', [CourseController::class, 'index'])->middleware(LanguagePrefixMiddleware::class);
+
+// PYTHON DESDE LARAVEL (facade Process + salida JSON)
+Route::get('/python/analyze', PythonAnalyzerController::class)->name('python.analyze');
 
 // QUEUE AND JOBS
 Route::get('/test-job', function () {
